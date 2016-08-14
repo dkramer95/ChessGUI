@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{80BCF391-D0BB-4F2A-83BF-546948423428}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ChessGUI</RootNamespace>
+    <AssemblyName>ChessGUI</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="CommandProcessor.cs" />
+    <Compile Include="Commands\ChessCommand.cs" />
+    <Compile Include="Commands\GetMovesCommand.cs" />
+    <Compile Include="Commands\MoveDoubleCommand.cs" />
+    <Compile Include="Commands\MoveSingleCommand.cs" />
+    <Compile Include="Commands\PlaceCommand.cs" />
+    <Compile Include="Controllers\ChessBoardController.cs" />
+    <Compile Include="Controllers\ChessMovement.cs" />
+    <Compile Include="Controllers\NewChessGame.cs" />
+    <Compile Include="Converters\ChessImageConverter.cs" />
+    <Compile Include="Dialogs\PromotionDialog.xaml.cs">
+      <DependentUpon>PromotionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AI\BasicAI.cs" />
+    <Compile Include="Models\Base\PawnEnPassant.cs" />
+    <Compile Include="Models\SpecialMoves\EnPassant.cs" />
+    <Compile Include="Models\SpecialMoves\EnPassant2.cs" />
+    <Compile Include="Models\SpecialMoves\KingInCheck.cs" />
+    <Compile Include="Models\SpecialMoves\PawnPromotion.cs" />
+    <Compile Include="Models\SpecialMoves\SpecialMove.cs" />
+    <Compile Include="Views\ChessBoardView.cs" />
+    <Compile Include="Views\ChessPieceView.cs" />
+    <Compile Include="Views\ChessSquareView.cs" />
+    <Compile Include="Views\SquareStyles.cs" />
+    <Page Include="Dialogs\PromotionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Base\ChessBoard.cs" />
+    <Compile Include="Models\Base\ChessColor.cs" />
+    <Compile Include="Models\Base\ChessGame.cs" />
+    <Compile Include="Models\Base\ChessPiece.cs" />
+    <Compile Include="Models\Base\ChessPlayer.cs" />
+    <Compile Include="Models\Base\ChessSquare.cs" />
+    <Compile Include="Models\Base\ChessUtils.cs" />
+    <Compile Include="Models\Base\Debug.cs" />
+    <Compile Include="Models\Pieces\BishopChessPiece.cs" />
+    <Compile Include="Models\Pieces\KingChessPiece.cs" />
+    <Compile Include="Models\Pieces\KnightChessPiece.cs" />
+    <Compile Include="Models\Pieces\PawnChessPiece.cs" />
+    <Compile Include="Models\Pieces\QueenChessPiece.cs" />
+    <Compile Include="Models\Pieces\RookChessPiece.cs" />
+    <Compile Include="Models\Utils\BoardScanner.cs" />
+    <Compile Include="Models\Utils\Moves.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="bin\Debug\ChessGUI.exe.config" />
+    <None Include="bin\Debug\ChessGUI.vshost.exe.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\ChessGUI.exe" />
+    <Content Include="bin\Debug\ChessGUI.pdb" />
+    <Content Include="bin\Debug\ChessGUI.vshost.exe" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Rook.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Queen.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Pawn.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Knight.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_King.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Bishop.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_Bishop.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_King.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_Knight.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_Pawn.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_Queen.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_Rook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
