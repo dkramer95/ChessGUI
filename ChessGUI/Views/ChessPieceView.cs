@@ -52,7 +52,7 @@ namespace ChessGUI.Views
 
         public void SetImageFromPiece(ChessPiece piece)
         {
-            //SetImagePath(GetChessPieceImage(piece));
+            SetImagePath(GetChessPieceImage(piece));
         }
 
         /// <summary>
@@ -61,9 +61,9 @@ namespace ChessGUI.Views
         /// <param name="path">path to image resource</param>
         public void SetImagePath(string path)
         {
-            //ImageBrush imgBrush = new ImageBrush(new BitmapImage(new Uri(path, UriKind.Relative)));
-            //imgBrush.Stretch = Stretch.Uniform;
-            //Background = imgBrush;
+            ImageBrush imgBrush = new ImageBrush(new BitmapImage(new Uri(path, UriKind.Relative)));
+            imgBrush.Stretch = Stretch.Uniform;
+            Background = imgBrush;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace ChessGUI.Views
         /// </summary>
         public void Clear()
         {
-            //Background = Brushes.Transparent;
+            Background = Brushes.Transparent;
         }
     }
 }

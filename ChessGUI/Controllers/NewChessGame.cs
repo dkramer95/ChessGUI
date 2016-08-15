@@ -5,8 +5,12 @@ using System.Collections.Generic;
 using System.Windows;
 using ChessGUI.Models.AI;
 using Chess.Models.Pieces;
-using ChessGUI.Models.Base;
 using ChessGUI.Models.SpecialMoves;
+using System.Windows.Media;
+using System.Threading;
+using System.Windows.Threading;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace ChessGUI.Controllers
 {
@@ -55,7 +59,7 @@ namespace ChessGUI.Controllers
 
             _specialMoves = new List<SpecialMove>()
             {
-                new EnPassant2(), new KingInCheck(), new PawnPromotion(),
+                new EnPassant(), new KingInCheck(), new PawnPromotion(),
             };
         }
 
@@ -72,18 +76,12 @@ namespace ChessGUI.Controllers
         {
             while (!IsGameOver())
             {
-                // wait until the player makes a move!
-
                 do
                 {
                     await Task.Delay(50);
                 } while (!ActivePlayer.DidMove);
-
-                //while (!ActivePlayer.DidMove)
-                //{
-                //    await Task.Delay(50);
-                //}
                 _specialMoves.ForEach(m => m.Check());
+                Controller.BoardView.Squares.ForEach(s => s.Background = Brushes.Red);
                 NextTurn();
             }
         }
@@ -94,41 +92,15 @@ namespace ChessGUI.Controllers
             return false;
         }
 
-        /// <summary>
-        /// Checks to see if the king is in check.
-        /// </summary>
-        /// <returns></returns>
-        //private bool IsKingInCheck()
-        //{
-        //    bool inCheck = false;
-
-        //    foreach (ChessPiece p in ActivePlayer.Pieces)
-        //    {
-        //        List<ChessSquare> movesForPiece = p.GetAvailableMoves();
-
-        //        foreach (ChessSquare s in movesForPiece)
-        //        {
-        //            if (s.IsOccupied() && p.IsOpponent(s.Piece) && s.Piece.Symbol == 'K')
-        //            {
-        //                KingChessPiece king = s.Piece as KingChessPiece;
-        //                king.InCheck = true;
-        //                inCheck = true;
-        //                break;
-        //            }
-        //        }
-        //    }
-        //    return inCheck;
-        //}
-
         private bool IsKingInCheck()
         {
-            KingChessPiece kingPiece = ActivePlayer.KingPiece;
+            KingChessPiece kingPiece = GetOpponent(ActivePlayer).KingPiece;
 
             // list to hold all possible moves from all the pieces
             List<ChessSquare> allMoves = new List<ChessSquare>();
 
             // Populate with all moves that the player can make against the opponent
-            ChessPlayer opponent = GetOpponent(ActivePlayer);
+            ChessPlayer opponent = ActivePlayer;
             opponent.Pieces.ForEach(p => allMoves.AddRange(p.GetAvailableMoves()));
 
             // check moves to see if any of them would land on the king
@@ -140,7 +112,6 @@ namespace ChessGUI.Controllers
                 MessageBox.Show("IN CHECK");
                 Controller.SquareViewFromSquare(kingPiece.Location).ToggleCheck();
             }
-
             return kingPiece.InCheck;
         }
 

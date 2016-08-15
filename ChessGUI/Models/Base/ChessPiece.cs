@@ -1,4 +1,5 @@
 ﻿using Chess.Models.Utils;
+using ChessGUI.Models.SpecialMoves;
 using System;
 using System.Collections.Generic;
 
@@ -121,7 +122,10 @@ namespace Chess.Models.Base
         /// <returns>List of available ChessSquare locations to legally move to</returns>
         public virtual List<ChessSquare> GetAvailableMoves()
         {
-            return new BoardScanner(this).Scan();
+            List<ChessSquare> available = new BoardScanner(this).Scan();
+            //KingInCheck.TestMoves(this, ref available);
+            //return new BoardScanner(this).Scan();
+            return available;
         }
 
         /// <summary>
@@ -196,6 +200,8 @@ namespace Chess.Models.Base
                 // newLocation is empty OR occupied with an opponent that we can capture
                 isValid = (!newLocation.IsOccupied()) ||
                           (newLocation.IsOccupied() && IsOpponent(newLocation.Piece));
+
+                //TODO check to make move wouldn't put king at risk.
             }
             return isValid;
         }

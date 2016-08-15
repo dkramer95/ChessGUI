@@ -1,6 +1,6 @@
 ﻿using Chess.Models.Base;
 using Chess.Models.Pieces;
-using ChessGUI.Models.Base;
+using ChessGUI.Models.SpecialMoves;
 using ChessGUI.Views;
 using System.Collections.Generic;
 using System.Windows;
@@ -78,7 +78,10 @@ namespace ChessGUI.Controllers
             if (IsStartAndEndSet())
             {
                 // Is EndSquare a valid place to move to?
-                if (MovePiece.GetAvailableMoves().Contains(_endSquare))
+                List<ChessSquare> available = MovePiece.GetAvailableMoves();
+                KingInCheck.TestMoves(MovePiece, ref available);
+
+                if (available.Contains(_endSquare))
                 {
                     canMove = true;
                 }

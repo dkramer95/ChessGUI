@@ -243,5 +243,30 @@ namespace Chess.Models.Base
         {
             return SquareAt(file + "" + rank);
         }
+
+        /// <summary>
+        /// Returns the set of pieces that are an enemy to the specified piece.
+        /// </summary>
+        /// <param name="piece">Piece to check to see who is the enemy</param>
+        /// <returns>List of enemy pieces</returns>
+        public List<ChessPiece> GetEnemyPieces(ChessPiece piece)
+        {
+            List<ChessPiece> pieces = (piece.Color == ChessColor.LIGHT) ? DarkPieces : LightPieces;
+            return pieces;
+        }
+
+        /// <summary>
+        /// Gets a list of all the ChessSquares that the enemy could move to.
+        /// </summary>
+        /// <param name="piece">Piece to check to see who is the enemy</param>
+        /// <returns>List of enemy moves</returns>
+        public List<ChessSquare> GetEnemyMoves(ChessPiece piece)
+        {
+            List<ChessPiece> enemyPieces = GetEnemyPieces(piece);
+            List<ChessSquare> enemyMoves = new List<ChessSquare>();
+            enemyPieces.ForEach(p => enemyMoves.AddRange(p.GetAvailableMoves()));
+
+            return enemyMoves;
+        }
     }
 }

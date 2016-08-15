@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Chess.Models.Utils;
 using System.Windows;
+using ChessGUI.Models.SpecialMoves;
 
 namespace Chess.Models.Pieces
 {
@@ -54,50 +55,10 @@ namespace Chess.Models.Pieces
 
         public override List<ChessSquare> GetAvailableMoves()
         {
-            // limit of 1 'jump' per each move direction
-
-            // Move King In Each of its normal valid positions.
-            // Check to see if opponent pieces could capture it if it moves there
-
             List<ChessSquare> available = new BoardScanner(this, 1).Scan();
-
-
-            // In all available positions, temporarily move the king there.
-
-            /*
-             * 
-             * [ ][ ][ ][P]
-             * [K][K][K][ ]
-             * [K][K][K][ ]
-             * [K][K][K][ ]
-             * 
-             */
-
-            // store previously held pieces at each of the available squares
-            // temporarily replace them with kings
-            // check all opponent pieces to see if they could capture king
-            // if they can, that location is invalid. Remove from available.
-            // revert back
-
-
-
-            return new BoardScanner(this, 1).Scan();
+            // filter out moves that would put this king in check
+            KingInCheck.RemoveUnsafe(this, ref available);
+            return available;
         }
-
-        private void RemoveUnsafe(List<ChessSquare> squares)
-        {
-
-        }
-
-        //private bool CheckCastling()
-        //{
-        //    bool canCastle = false;
-
-        //    if (Location.Rank == CastlingRank)
-        //    {
-
-        //    }
-        //    return canCastle;
-        //}
     }
 }

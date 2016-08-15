@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Chess.Models.Utils;
-using ChessGUI.Models.Base;
 using System.Windows;
 using ChessGUI.Models.SpecialMoves;
 using ChessGUI.Controllers;
@@ -14,23 +13,6 @@ namespace Chess.Models.Pieces
 {
     /// <summary>
     /// This is the ChessPiece implementation for Pawns.
-    /// 
-    /// ::MOVEMENT_RULES::
-    /// For their first move, a Pawn may move up to two ChessTiles, and thereafter they
-    /// may only move one ChessSquare at a time.
-    /// 
-    /// ::PROMOTION::
-    /// If a pawn advances to the end rank (8 for LIGHT, 1 for DARK), it can be promoted.
-    /// A promotion means this Pawn can be exchanged for any other piece, with the exception
-    /// of another Pawn or a King.
-    /// 
-    /// ::CAPTURING::
-    /// Pawns capture by moving one square diagonally, either to the right or left. Pawns
-    /// CANNOT capture, by moving straight foreward. Captures can only happen on pieces of
-    /// the opposite color of this Pawn.
-    /// 
-    /// ::VALUE::
-    /// Pawns have a value of 1.
     /// </summary>
     public class PawnChessPiece : ChessPiece
     {
@@ -111,32 +93,7 @@ namespace Chess.Models.Pieces
         public override bool MoveTo(ChessSquare newLocation)
         {
             bool result = base.MoveTo(newLocation);
-            //CheckCaptureEnPassant(newLocation);
             return result;
-        }
-
-        private void CheckCaptureEnPassant(ChessSquare newLocation)
-        {
-            //if (newLocation == EnPassant.CaptureSquare)
-            //{
-            //    EnPassant.DidCapture = true;
-            //    newLocation.Piece = this;
-            //}
-        }
-
-        static class EnPassantTest
-        {
-            private static readonly List<int> ValidRanks = new List<int> { 4, 5 };
-
-            // Capture location that an enemy pawn will move to, if they capture en passant.
-            public static ChessSquare CaptureSquare { get; private set; }
-
-            public static bool DidCaptureEnPassant { get; set; }
-
-            public static void CheckCapture()
-            {
-                
-            }
         }
     }
 }

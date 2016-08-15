@@ -1,126 +1,116 @@
 ﻿using Chess.Models.Base;
 using Chess.Models.Pieces;
 using ChessGUI.Controllers;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace ChessGUI.Models.SpecialMoves
 {
     public class EnPassant : SpecialMove
     {
-        //// valid first move (2 ranks) for capturing en passant
-        //private static readonly List<int> ValidRanks = new List<int> { 4, 5 };
+        private static readonly int[] ValidRanks = { 4, 5 };
 
-        //private static bool ShouldClear { get; set; }
+        // Capture location that an enemy pawn will move to if they capture en passant
+        public static ChessSquare CaptureSquare { get; private set; }
 
-        //// Capture location that an enemy pawn will move to if they capture en passant.
-        //// This location is 1 rank back, from the MovedPawn.
-        //public static ChessSquare CaptureSquare { get; private set; }
+        // Pawn that recently moved 2 ranks and can be captured en passant
+        public static PawnChessPiece MovedPawn { get; private set; }
 
-        //// Recently moved pawn that moved 2 ranks
-        //public static PawnChessPiece MovedPawn { get; private set; }
-        ////public static bool DidCapture { get; set; }
-
-        //private static bool _didCapture;
-        //public static bool DidCapture
-        //{
-        //    get
-        //    {
-        //        return _didCapture;
-        //    }
-        //    set
-        //    {
-        //        _didCapture = value;
-        //        Clear();
-        //    }
-        //}
+        public static bool DidCapture { get; private set; }
 
         public override void Check()
         {
-            //CheckCapture();
-
-            //if (DidCapture)
-            //{
-            //    Game.Controller.UpdateSquareView(MovedPawn.Location, null);
-            //    MovedPawn.Location.Piece = null;
-            //    ShouldClear = true;
-            //}
+            CheckCapture();
         }
 
-        // TODO -- Clearing is a little fragile. Be sure to keep testing and clean up a bit.
-        // Issue arises when nullifying references, in places they shouldn't be, yet!
+        /// <summary>
+        /// Checks and updates pawns to allow for capturing en passant.
+        /// </summary>
+        private static void CheckCapture()
+        {
+            if (ChessMovement.MovePiece is PawnChessPiece)
+            {
+                PawnChessPiece pawn = ChessMovement.MovePiece as PawnChessPiece;
 
-        //public static void CheckCapture()
-        //{
-        //    CheckClear();
+                if (DidMoveTwoRanks(pawn))
+                {
+                    Update(pawn);
+                } else if ((pawn.Location == CaptureSquare))
+                {
+                    UpdateCapture(pawn);
+                } else
+                {
+                    Clear();
+                }
+            } else
+            {
+                Clear();
+            }
+        }
 
-        //    // Check to see if last moved piece is a PawnChessPiece
-        //    if (ChessMovement.MovePiece is PawnChessPiece)
-        //    {
-        //        PawnChessPiece pawn = ChessMovement.MovePiece as PawnChessPiece;
+        /// <summary>
+        /// Updates the MovedPawn and CaptureSquare.
+        /// </summary>
+        /// <param name="pawn"></param>
+        private static void Update(PawnChessPiece pawn)
+        {
+            Clear();
+            MovedPawn = pawn;
+            UpdateCaptureSquare();
+            DidCapture = false;
+        }
 
-        //        // Check to see if pawn moved 2 ranks
-        //        if ((pawn.MoveCount == 1) && ValidRanks.Contains(pawn.Location.Rank))
-        //        {
-        //            UpdateMovedPawn(pawn);
-        //        }
-        //        // Check to see if pawn moved can capture en passant
-        //        else
-        //        {
-        //            //ShouldClear = true;
-        //            Clear();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Clear();
-        //    }
-        //}
+        /// <summary>
+        /// Updates the en passant capture and ensures that the enemy pawn 
+        /// is at the correct position, and that the view is properly updated.
+        /// </summary>
+        /// <param name="pawn"></param>
+        private static void UpdateCapture(PawnChessPiece pawn)
+        {
+            Game.Controller.UpdateSquareView(MovedPawn.Location, null);
+            CaptureSquare.Piece = pawn;
+            CaptureSquare = null;
+            Clear();
+        }
 
-        //private static void CheckClear()
-        //{
-        //    if (ShouldClear)
-        //    {
-        //        Clear();
-        //        ShouldClear = false;
-        //    }
-        //}
+        /// <summary>
+        /// Clears out MovedPawn and CaptureSquares.
+        /// </summary>
+        private static void Clear()
+        {
+            // Clear out previously moved pawn if exists
+            if (MovedPawn != null)
+            {
+                MovedPawn = null;
+                if (CaptureSquare != null)
+                {
+                    CaptureSquare.Piece = null;
+                }
+            }
+        }
 
-        //public static void Clear()
-        //{
-        //    if (MovedPawn != null)
-        //    {
-        //        if (!DidCapture)
-        //        {
-        //            CaptureSquare.Piece = null;
-        //        }
-        //        MovedPawn = null;
-        //        DidCapture = false;
-        //    }
-        //}
+        /// <summary>
+        /// Updates the CaptureSquare, which is the ChessSquare that an enemy
+        /// PawnChessPiece will land, if they capture the MovedPawn en passant.
+        /// </summary>
+        private static void UpdateCaptureSquare()
+        {
+            int direction = (MovedPawn.Color == ChessColor.LIGHT) ? -1 : 1;
+            ChessSquare square = MovedPawn.Location;
 
-        ///// <summary>
-        ///// Updates this MovedPawn to the pawn that has recently moved 2 units.
-        ///// </summary>
-        ///// <param name="pawn"></param>
-        //private static void UpdateMovedPawn(PawnChessPiece pawn)
-        //{
-        //    Clear();
-        //    MovedPawn = pawn;
-        //    UpdateEnPassantLocation();
-        //}
+            CaptureSquare = Game.Controller.BoardModel.SquareAt(square.File, square.Rank + direction);
+            CaptureSquare.Piece = MovedPawn;
+        }
 
-        //private static void UpdateEnPassantLocation()
-        //{
-        //    // determine position for capturing en passant
-        //    int direction = (MovedPawn.Color == ChessColor.LIGHT) ? -1 : 1;
-        //    CaptureSquare = ChessPiece.Board.SquareAt(MovedPawn.Location.File, MovedPawn.Location.Rank + direction);
-        //    CaptureSquare.Piece = MovedPawn;
-        //}
+        /// <summary>
+        /// Checks to see if the PawnChessPiece moved 2 ranks so that it can be
+        /// captured en passant.
+        /// </summary>
+        /// <param name="pawn">PawnChessPiece to check</param>
+        /// <returns>true if PawnChessPiece moved 2 ranks</returns>
+        private static bool DidMoveTwoRanks(PawnChessPiece pawn)
+        {
+            bool didMoveTwoRanks = (pawn.MoveCount == 1) && ValidRanks.Contains(pawn.Location.Rank);
+            return didMoveTwoRanks;
+        }
     }
 }

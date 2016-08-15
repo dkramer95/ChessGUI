@@ -33,6 +33,7 @@ namespace ChessGUI.Controllers
             BoardView.KeyDown += BoardView_KeyDown;
         }
 
+
         private void BoardView_KeyDown(object sender, KeyEventArgs e)
         {
             // show preview of moves we can make
@@ -54,16 +55,16 @@ namespace ChessGUI.Controllers
 
         public void UpdateSquareView(ChessSquare squareToUpdate, ChessPiece piece)
         {
-            //ChessSquareView squareView = SquareViewFromSquare(squareToUpdate);
+            ChessSquareView squareView = SquareViewFromSquare(squareToUpdate);
 
-            //if (piece != null)
-            //{
-            //    squareView.PieceView.SetImageFromPiece(piece);
-            //}
-            //else
-            //{
-            //    squareView.PieceView.Clear();
-            //}
+            if (piece != null)
+            {
+                squareView.PieceView.SetImageFromPiece(piece);
+            }
+            else
+            {
+                squareView.PieceView.Clear();
+            }
         }
 
         /// <summary>
@@ -115,16 +116,16 @@ namespace ChessGUI.Controllers
             squareView.MouseRightButtonDown += Square_RightClick;
 
 
-            /// TESTING ///
-            // Bind image square to board model square
-            ChessPieceView pieceView = squareView.PieceView;
-            Binding pieceViewBinding = new Binding("Piece");
-            squareView.DataContext = squareModel;
-            pieceView.DataContext = squareModel;
-            pieceViewBinding.Mode = BindingMode.TwoWay;
-            pieceViewBinding.Converter = new ChessImageConverter();
-            pieceView.SetBinding(ChessPieceView.BackgroundProperty, pieceViewBinding);
-            /// TESTING ///
+            ///// TESTING ///
+            //// Bind image square to board model square
+            //ChessPieceView pieceView = squareView.PieceView;
+            //Binding pieceViewBinding = new Binding("Piece");
+            //squareView.DataContext = squareModel;
+            //pieceView.DataContext = squareModel;
+            //pieceViewBinding.Mode = BindingMode.TwoWay;
+            //pieceViewBinding.Converter = new ChessImageConverter();
+            //pieceView.SetBinding(ChessPieceView.BackgroundProperty, pieceViewBinding);
+            ///// TESTING ///
         }
 
         /// <summary>

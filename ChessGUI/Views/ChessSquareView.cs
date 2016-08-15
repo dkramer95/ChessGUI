@@ -1,4 +1,5 @@
 ﻿using Chess.Models.Base;
+using ChessGUI.Controllers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

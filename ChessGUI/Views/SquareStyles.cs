@@ -13,7 +13,7 @@ namespace ChessGUI.Views
         public static Brush HIGHLIGHT_COLOR = Brushes.LightGreen;
 
         // Color to help indicate that this ChessSquareView is available to move to
-        public static Brush PREVIEW_COLOR = Brushes.LightBlue;
+        public static Brush PREVIEW_COLOR = Brushes.MediumAquamarine;
 
         public static Brush CHECK_COLOR = Brushes.Red;
 
