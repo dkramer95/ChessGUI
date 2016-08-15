@@ -89,33 +89,36 @@ namespace ChessGUI.Models.SpecialMoves
             if (Game.ActivePlayer.Color == movePiece.Color)
             {
                 KingChessPiece king = Game.ActivePlayer.KingPiece;
-                List<ChessSquare> validMoves = new List<ChessSquare>();
-                List<ChessSquare> opponentMoves = null;
 
-                // Pretend to move, by making the square of the piece we're moving empty
-                ChessSquare movePieceSquare = movePiece.Location;
-                movePieceSquare.Piece = null;
-
-                // For every legal move, check to see if by making that move it would threaten
-                // the king
-                moves.ForEach(s =>
+                if (movePiece != king)
                 {
-                    ChessPiece original = s.Piece;
-                    s.Piece = movePiece;
+                    List<ChessSquare> validMoves = new List<ChessSquare>();
+                    List<ChessSquare> opponentMoves = null;
 
-                    opponentMoves = Game.Controller.BoardModel.GetEnemyMoves(movePiece);
+                    // Pretend to move, by making the square of the piece we're moving empty
+                    ChessSquare movePieceSquare = movePiece.Location;
+                    movePieceSquare.Piece = null;
 
-                    // is valid -- doesn't threaten king
-                    if (!opponentMoves.Contains(king.Location))
+                    // For every legal move, check to see if by making that move it would threaten
+                    // the king
+                    moves.ForEach(s =>
                     {
-                        validMoves.Add(s);
-                    }
-                    // revert back
-                    s.Piece = original;
-                });
-                movePieceSquare.Piece = movePiece;
+                        ChessPiece original = s.Piece;
+                        s.Piece = movePiece;
 
-                moves = validMoves;
+                        opponentMoves = Game.Controller.BoardModel.GetEnemyMoves(movePiece);
+
+                        // is valid -- doesn't threaten king
+                        if (!opponentMoves.Contains(king.Location))
+                        {
+                            validMoves.Add(s);
+                        }
+                        // revert back
+                        s.Piece = original;
+                    });
+                    movePieceSquare.Piece = movePiece;
+                    moves = validMoves;
+                }
             }
         }
 

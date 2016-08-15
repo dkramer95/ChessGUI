@@ -80,6 +80,7 @@ namespace ChessGUI.Controllers
                 {
                     await Task.Delay(50);
                 } while (!ActivePlayer.DidMove);
+
                 _specialMoves.ForEach(m => m.Check());
                 Controller.BoardView.Squares.ForEach(s => s.Background = Brushes.Red);
                 NextTurn();

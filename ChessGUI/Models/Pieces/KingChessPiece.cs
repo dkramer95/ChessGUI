@@ -57,7 +57,7 @@ namespace Chess.Models.Pieces
         {
             List<ChessSquare> available = new BoardScanner(this, 1).Scan();
             // filter out moves that would put this king in check
-            KingInCheck.RemoveUnsafe(this, ref available);
+            //KingInCheck.RemoveUnsafe(this, ref available);
             return available;
         }
     }

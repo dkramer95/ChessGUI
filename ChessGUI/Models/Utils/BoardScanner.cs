@@ -66,7 +66,7 @@ namespace Chess.Models.Utils
         public BoardScanner(ChessPiece piece, int limit = NO_LIMIT)
         {
             _piece = piece;
-            _board = ChessPiece.Board;
+            _board = ChessPiece.Board;  //TODO:: Try to remove static CHessBoard from player!
             Pivot  = _piece.Location;
             Limit = limit;
         }
