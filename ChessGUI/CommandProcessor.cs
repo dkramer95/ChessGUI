@@ -32,7 +32,6 @@ namespace Chess
             _board = new ChessBoard();
             _board.Init();  // uncomment to load board
             _board.PrintDebug();
-            ChessPiece.Init(_board);
         }
 
         public CommandProcessor(ChessBoard board)

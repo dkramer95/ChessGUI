@@ -21,8 +21,6 @@ namespace ChessGUI.Controllers
         public static ChessSquareView End { get; private set; }
 
         // The piece we're moving
-        //private static ChessPiece _pieceToMove;
-
         public static ChessPiece MovePiece { get; set; }
 
         // Player whose turn it is.

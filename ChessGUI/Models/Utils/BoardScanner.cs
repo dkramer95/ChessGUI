@@ -24,9 +24,10 @@ namespace Chess.Models.Utils
     /// </summary>
     public class BoardScanner
     {
+        public static ChessBoard Board { get; set; }
+
         // The ChessPiece we will begin scanning from
         private ChessPiece _piece;
-        private ChessBoard _board;
 
         // Next ChessPiece positioning
         private char _nextFile;
@@ -66,7 +67,6 @@ namespace Chess.Models.Utils
         public BoardScanner(ChessPiece piece, int limit = NO_LIMIT)
         {
             _piece = piece;
-            _board = ChessPiece.Board;  //TODO:: Try to remove static CHessBoard from player!
             Pivot  = _piece.Location;
             Limit = limit;
         }
@@ -191,7 +191,7 @@ namespace Chess.Models.Utils
             for (int j = 0; j < moveArr.Length; j += 2)
             {
                 ChessSquare diagonal = 
-                    _board.SquareAt((char)(startSquare.File + moveArr[j]), startSquare.Rank + moveArr[j + 1]);
+                    Board.SquareAt((char)(startSquare.File + moveArr[j]), startSquare.Rank + moveArr[j + 1]);
 
                 // add if diagonals exists
                 if (diagonal != null)
@@ -244,7 +244,7 @@ namespace Chess.Models.Utils
         public ChessSquare Next()
         {
             Update(ref _nextFile, ref _nextRank);
-            return _board.SquareAt(_nextFile, _nextRank);
+            return Board.SquareAt(_nextFile, _nextRank);
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace Chess.Models.Utils
             char nextFile = _nextFile;
             int nextRank = _nextRank;
             Update(ref nextFile, ref nextRank);
-            return _board.SquareAt(nextFile, nextRank) != null;
+            return Board.SquareAt(nextFile, nextRank) != null;
         }
     }
 }

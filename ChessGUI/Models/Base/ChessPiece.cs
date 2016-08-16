@@ -32,11 +32,6 @@ namespace Chess.Models.Base
         // Has this ChessPiece been captured by another ChessPiece?
         public bool IsCaptured { get; protected set; }
 
-        // The ChessBoard that all ChessPieces belong to to access other tiles / pieces
-        protected static ChessBoard _board;
-
-        public static ChessBoard Board { get { return _board; } }
-
         // Have we initialized ChessPiece so that it can talk to the ChessBoard for moving around?
         private static bool _isInitialized = false;
 
@@ -51,33 +46,10 @@ namespace Chess.Models.Base
         /// <param name="location"></param>
         public ChessPiece(ChessSquare location, ChessColor color)
         {
-            if (_isInitialized)
-            {
-                Location = location;
-                Color = color;
-                Location.Piece = this;
-            } else
-            {
-                throw new Exception("ChessPiece hasn't been initialized to a board! Please " +
-                    "call ChessPiece.Init() before constructing chess pieces!");
-            }
+            Location = location;
+            Color = color;
+            Location.Piece = this;
             AvailableCaptures = new List<ChessPiece>();
-        }
-
-        /// <summary>
-        /// Method to be called prior to creating any ChessPieces. This method allows for
-        /// communication with the ChessBoard, to enable ChessPiece movement.
-        /// </summary>
-        /// <param name="chessBoard">ChessBoard instance</param>
-        /// <returns>true if ChessBoard instance is not null</returns>
-        public static bool Init(ChessBoard chessBoard)
-        {
-            if (chessBoard != null)
-            {
-                _isInitialized = true;
-                _board = chessBoard;
-            }
-            return _isInitialized;
         }
 
         /// <summary>
@@ -102,18 +74,6 @@ namespace Chess.Models.Base
                 ++MoveCount;
             }
             return didMove;
-        }
-
-        /// <summary>
-        /// Convenience method for moving to a new location by passing the string
-        /// value of the location.
-        /// </summary>
-        /// <param name="newLocation"></param>
-        /// <returns></returns>
-        [Obsolete]
-        public bool MoveTo(string newLocation)
-        {
-            return MoveTo(_board.SquareAt(newLocation));
         }
 
         /// <summary>
@@ -200,8 +160,6 @@ namespace Chess.Models.Base
                 // newLocation is empty OR occupied with an opponent that we can capture
                 isValid = (!newLocation.IsOccupied()) ||
                           (newLocation.IsOccupied() && IsOpponent(newLocation.Piece));
-
-                //TODO check to make move wouldn't put king at risk.
             }
             return isValid;
         }

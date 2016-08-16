@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Models.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,7 @@ namespace Chess.Models.Base
         /// </summary>
         public ChessBoard()
         {
-            CreateSquares();
+            Init();
         }
 
         /// <summary>
@@ -50,7 +51,8 @@ namespace Chess.Models.Base
         /// </summary>
         public void Init()
         {
-            ChessPiece.Init(this);
+            CreateSquares();
+            BoardScanner.Board = this;
             AddPieces();
         }
 
