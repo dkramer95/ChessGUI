@@ -1,5 +1,6 @@
 ﻿using Chess.Models.Utils;
 using ChessGUI.Models.SpecialMoves;
+using ChessGUI.Models.Utils;
 using System;
 using System.Collections.Generic;
 
@@ -32,13 +33,11 @@ namespace Chess.Models.Base
         // Has this ChessPiece been captured by another ChessPiece?
         public bool IsCaptured { get; protected set; }
 
-        // Have we initialized ChessPiece so that it can talk to the ChessBoard for moving around?
-        private static bool _isInitialized = false;
-
         // Other ChessPieces that this ChessPiece can capture
         public List<ChessPiece> AvailableCaptures { get; private set; }
 
-        public abstract MoveDirection[] MoveDirections { get; }
+        public abstract Move[] MoveDirections { get; }
+
 
         /// <summary>
         /// Constructs a new chess piece at the specified location.
@@ -82,9 +81,8 @@ namespace Chess.Models.Base
         /// <returns>List of available ChessSquare locations to legally move to</returns>
         public virtual List<ChessSquare> GetAvailableMoves()
         {
-            List<ChessSquare> available = new BoardScanner(this).Scan();
-            //KingInCheck.TestMoves(this, ref available);
-            //return new BoardScanner(this).Scan();
+            //List<ChessSquare> available = new BoardScanner(this).Scan();
+            List<ChessSquare> available = BoardScanner.Scan(this);
             return available;
         }
 

@@ -88,6 +88,8 @@
     <Compile Include="Models\SpecialMoves\KingInCheck.cs" />
     <Compile Include="Models\SpecialMoves\PawnPromotion.cs" />
     <Compile Include="Models\SpecialMoves\SpecialMove.cs" />
+    <Compile Include="Models\Utils\Moves.cs" />
+    <Compile Include="Models\Utils\BoardScanner.cs" />
     <Compile Include="Views\ChessBoardView.cs" />
     <Compile Include="Views\ChessPieceView.cs" />
     <Compile Include="Views\ChessSquareView.cs" />
@@ -124,8 +126,6 @@
     <Compile Include="Models\Pieces\PawnChessPiece.cs" />
     <Compile Include="Models\Pieces\QueenChessPiece.cs" />
     <Compile Include="Models\Pieces\RookChessPiece.cs" />
-    <Compile Include="Models\Utils\BoardScanner.cs" />
-    <Compile Include="Models\Utils\Moves.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

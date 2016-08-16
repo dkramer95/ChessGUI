@@ -1,7 +1,7 @@
 ﻿using Chess.Models.Base;
 using System;
 using System.Collections.Generic;
-using Chess.Models.Utils;
+using ChessGUI.Models.Utils;
 
 namespace Chess.Models.Pieces
 {
@@ -20,7 +20,7 @@ namespace Chess.Models.Pieces
             }
         }
 
-        public override MoveDirection[] MoveDirections
+        public override Move[] MoveDirections
         {
             get
             {
@@ -43,11 +43,7 @@ namespace Chess.Models.Pieces
 
         public override List<ChessSquare> GetAvailableMoves()
         {
-            List<ChessSquare> available = new List<ChessSquare>();
-            BoardScanner scanner = new BoardScanner(this);
-
-            available.AddRange(scanner.ScanBranched());
-
+            List<ChessSquare> available = BoardScanner.ScanBranched(this, 1);
             return available;
         }
     }

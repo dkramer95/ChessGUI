@@ -1,10 +1,5 @@
 ﻿using Chess.Models.Base;
-using Chess.Models.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ChessGUI.Models.Utils;
 
 namespace Chess.Models.Pieces
 {
@@ -14,7 +9,7 @@ namespace Chess.Models.Pieces
         {
         }
 
-        public override MoveDirection[] MoveDirections
+        public override Move[] MoveDirections
         {
             get
             {

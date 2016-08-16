@@ -1,9 +1,7 @@
 ﻿using Chess.Models.Base;
-using System;
 using System.Collections.Generic;
-using Chess.Models.Utils;
-using System.Windows;
 using ChessGUI.Models.SpecialMoves;
+using ChessGUI.Models.Utils;
 
 namespace Chess.Models.Pieces
 {
@@ -31,7 +29,7 @@ namespace Chess.Models.Pieces
             }
         }
 
-        public override MoveDirection[] MoveDirections
+        public override Move[] MoveDirections
         {
             get
             {
@@ -53,12 +51,13 @@ namespace Chess.Models.Pieces
             return Color + "_King";
         }
 
-        public override List<ChessSquare> GetAvailableMoves()
-        {
-            List<ChessSquare> available = new BoardScanner(this, 1).Scan();
-            // filter out moves that would put this king in check
-            KingInCheck.RemoveUnsafe(this, ref available);
-            return available;
-        }
+        //public override List<ChessSquare> GetAvailableMoves()
+        //{
+        //    //List<ChessSquare> available = new BoardScanner(this, 1).Scan();
+        //    List<ChessSquare> available = null;
+        //    // filter out moves that would put this king in check
+        //    KingInCheck.RemoveUnsafe(this, ref available);
+        //    return available;
+        //}
     }
 }

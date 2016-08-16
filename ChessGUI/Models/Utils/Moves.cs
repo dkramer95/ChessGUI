@@ -4,83 +4,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Models.Utils
+namespace ChessGUI.Models.Utils
 {
-    /// <summary>
-    /// Convenience class for having "tidy" access to different move types. This is just
-    /// a collection of static arrays, for each of the different moves. To eliminate
-    /// redundancy, ChessPieces should return one of these arrays for their MoveDirection
-    /// property.
-    /// </summary>
-    class Moves
+    public static class Moves
     {
-        // Light Pawn
-        public static MoveDirection[] NORTH = 
-        {
-            MoveDirection.NORTH
-        };
+        public static Move north = new Move() { FileMoveValue = 0, RankMoveValue = 1, Name = "North" };
+        public static Move south = new Move() { FileMoveValue = 0, RankMoveValue = -1, Name = "South" };
+        public static Move east  = new Move() { FileMoveValue = 1, RankMoveValue = 0, Name = "East" };
+        public static Move west  = new Move() { FileMoveValue = -1, RankMoveValue = 0, Name = "West" };
 
-        // Dark Pawn
-        public static MoveDirection[] SOUTH =
-        {
-            MoveDirection.SOUTH
-        };
+        public static Move northEast = new Move() { FileMoveValue = 1, RankMoveValue = 1, Name = "NorthEast" };
+        public static Move northWest = new Move() { FileMoveValue = -1, RankMoveValue = 1, Name = "NorthWest" };
+        public static Move southEast = new Move() { FileMoveValue = 1, RankMoveValue = -1, Name = "SouthEast" };
+        public static Move southWest = new Move() { FileMoveValue = -1, RankMoveValue = -1, Name = "SouthWest" };
 
-        // Rook / Knight
-        public static MoveDirection[] HORIZ_VERT = 
-        {
-            MoveDirection.NORTH, MoveDirection.SOUTH,
-            MoveDirection.EAST,  MoveDirection.WEST
-        };
+        // Movement arrays
+        public static Move[] NORTH = { north };
 
-        // Bishop
-        public static MoveDirection[] DIAGONAL =
-        {
-            MoveDirection.NORTH_EAST, MoveDirection.NORTH_WEST,
-            MoveDirection.SOUTH_EAST, MoveDirection.SOUTH_WEST
-        };
+        public static Move[] SOUTH = { south };
 
-        // King, Queen
-        public static MoveDirection[] ALL =
-        {
-            MoveDirection.NORTH,      MoveDirection.SOUTH,
-            MoveDirection.EAST,       MoveDirection.WEST,
-            MoveDirection.NORTH_EAST, MoveDirection.NORTH_WEST,
-            MoveDirection.SOUTH_EAST, MoveDirection.SOUTH_WEST
-        };
+        public static Move[] HORIZ_VERT = { north, south, east, west };
 
+        public static Move[] DIAGONAL = { northEast, northWest,
+                                          southWest, southWest }; 
 
-        //TODO: this method is duplicated in board scanner. Remove one of them!
-
-        /// <summary>
-        /// Gets the direction advancement value from the specified MoveDirection.
-        /// </summary>
-        /// <param name="d">MoveDirection to check</param>
-        /// <returns>int value of MoveDirection</returns>
-        public static int GetMoveValue(MoveDirection d)
-        {
-            int value = 0;
-            switch (d)
-            {
-                case MoveDirection.NORTH:
-                case MoveDirection.EAST:
-                    value = 1;
-                    break;
-                case MoveDirection.SOUTH:
-                case MoveDirection.WEST:
-                    value = -1;
-                    break;
-            }
-            return value;
-        }
+        public static Move[] ALL = { north, south, east, west, northEast,
+                                     northWest, southWest, southWest };
     }
 
-    /// <summary>
-    /// Enum for all the different possible movement directions.
-    /// </summary>
-    public enum MoveDirection
+    public struct Move
     {
-        NORTH, SOUTH, EAST, WEST,
-        NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST,
+        public int RankMoveValue { get; set; }
+        public int FileMoveValue { get; set; }
+
+        public string Name { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            Move move = (Move)obj;
+
+            bool isEqual = (FileMoveValue == move.FileMoveValue) &&
+                           (RankMoveValue == move.RankMoveValue);
+            return isEqual;
+        }
     }
 }

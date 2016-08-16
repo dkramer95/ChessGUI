@@ -1,4 +1,5 @@
 ﻿using Chess.Models.Utils;
+using ChessGUI.Models.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,7 @@ namespace Chess.Models.Base
         public void Init()
         {
             CreateSquares();
+            BoardScanner.Board = this;
             BoardScanner.Board = this;
             AddPieces();
         }
