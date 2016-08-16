@@ -23,8 +23,8 @@ namespace Chess.Models.Base
 
         // Contains all 64 chess tiles and allows us access squares by their name
         private Dictionary<string, ChessSquare> _squares;
-
         public List<ChessSquare> Squares { get { return _squares.Values.ToList(); } }
+
         public List<ChessPiece> LightPieces { get; private set; }
         public List<ChessPiece> DarkPieces { get; private set; }
 
@@ -51,7 +51,6 @@ namespace Chess.Models.Base
         public void Init()
         {
             CreateSquares();
-            BoardScanner.Board = this;
             BoardScanner.Board = this;
             AddPieces();
         }
@@ -80,73 +79,6 @@ namespace Chess.Models.Base
         }
 
         /// <summary>
-        /// Prints this chessboard out to the console, for debugging purposes.
-        /// </summary>
-        public void PrintDebug()
-        {
-            Console.WriteLine("\t  Black");
-
-            // print rank and board pieces
-            for (int r = MAX_RANK; r >= MIN_RANK; r--)
-            {
-                Console.Write(r + " ");
-
-                for (char f = MIN_FILE; f <= MAX_FILE; f++)
-                {
-                    ChessSquare square = SquareAt(f, r);
-                    char symbol = square.IsOccupied() ? square.Piece.Symbol : ' ';
-                    ChessConsoleColors(square);
-
-                    Console.Write(" " + symbol + " ");
-                }
-                NormalConsoleColors();
-                Console.WriteLine();
-            }
-            PrintFileLabels();
-        }
-
-        /// <summary>
-        /// Colorizes the Console Buffer with the proper colors based on the ChessSquare.
-        /// </summary>
-        /// <param name="square">ChessSquare to get color values from</param>
-        private void ChessConsoleColors(ChessSquare square)
-        {
-            // Background Square Color
-            Console.BackgroundColor = 
-                (square.Color == ChessColor.LIGHT) ? ConsoleColor.Gray : ConsoleColor.DarkGray;
-
-            // Foreground Text Color
-            if (square.Piece != null)
-            {
-                Console.ForegroundColor =
-                    (square.Piece.Color == ChessColor.LIGHT) ? ConsoleColor.White : ConsoleColor.Black;
-            }
-        }
-
-        /// <summary>
-        /// Colorizes the Console Buffer with normal colors.
-        /// </summary>
-        private void NormalConsoleColors()
-        {
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
-
-        /// <summary>
-        /// Prints labels for each File { A - H }
-        /// </summary>
-        private void PrintFileLabels()
-        {
-            Console.Write("   ");
-            for (char f = MIN_FILE; f <= MAX_FILE; f++)
-            {
-                Console.Write(f + "  ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("\t  White");
-        }
-
-        /// <summary>
         /// Adds all the LIGHT and DARK pieces to this ChessBoard.
         /// </summary>
         private void AddPieces()
@@ -171,21 +103,22 @@ namespace Chess.Models.Base
         /// <returns>starting layout based on the specified ChessColor</returns>
         private List<char> GetInitialPieceLayout(ChessColor color)
         {
-            // Piece layout for DARK ChessPieces (at the top)
-            List<char> pieceLayout = new List<char>()
-            {
-                'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R',
-                'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
-            };
+            List<char> pieceLayout = null;
 
-            if (color == ChessColor.LIGHT)
+            if (color == ChessColor.DARK)
+            {
+                pieceLayout = new List<char>()
+                {
+                    'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R',
+                    'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
+                };
+            } else if (color == ChessColor.LIGHT)
             {
                 pieceLayout = new List<char>()
                 {
                     'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
                     'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R',
                 };
-
             }
             return pieceLayout;
         }
@@ -245,11 +178,18 @@ namespace Chess.Models.Base
         /// <param name="file">File position</param>
         /// <param name="rank">Rank position</param>
         /// <returns>ChessSquare at the specific File,Rank position</returns>
-        public ChessSquare SquareAt (char file, int rank)
+        public ChessSquare SquareAt(char file, int rank)
         {
             return SquareAt(file + "" + rank);
         }
 
+
+
+
+
+        // TODO discard these. Better place for them is in ChessGame!!
+
+        [Obsolete]
         /// <summary>
         /// Returns the set of pieces that are an enemy to the specified piece.
         /// </summary>
@@ -261,6 +201,7 @@ namespace Chess.Models.Base
             return pieces;
         }
 
+        [Obsolete]
         /// <summary>
         /// Gets a list of all the ChessSquares that the enemy could move to.
         /// </summary>
@@ -274,5 +215,83 @@ namespace Chess.Models.Base
 
             return enemyMoves;
         }
+
+
+        #region old
+
+        /////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////
+        // TODO:: These were for the console. Maybe make into its own class. But they're not used anymore!
+
+
+
+        /// <summary>
+        /// Prints this chessboard out to the console, for debugging purposes.
+        /// </summary>
+        public void PrintDebug()
+        {
+            Console.WriteLine("\t  Black");
+
+            // print rank and board pieces
+            for (int r = MAX_RANK; r >= MIN_RANK; r--)
+            {
+                Console.Write(r + " ");
+
+                for (char f = MIN_FILE; f <= MAX_FILE; f++)
+                {
+                    ChessSquare square = SquareAt(f, r);
+                    char symbol = square.IsOccupied() ? square.Piece.Symbol : ' ';
+                    ChessConsoleColors(square);
+
+                    Console.Write(" " + symbol + " ");
+                }
+                NormalConsoleColors();
+                Console.WriteLine();
+            }
+            PrintFileLabels();
+        }
+
+        /// <summary>
+        /// Colorizes the Console Buffer with the proper colors based on the ChessSquare.
+        /// </summary>
+        /// <param name="square">ChessSquare to get color values from</param>
+        private void ChessConsoleColors(ChessSquare square)
+        {
+            // Background Square Color
+            Console.BackgroundColor =
+                (square.Color == ChessColor.LIGHT) ? ConsoleColor.Gray : ConsoleColor.DarkGray;
+
+            // Foreground Text Color
+            if (square.Piece != null)
+            {
+                Console.ForegroundColor =
+                    (square.Piece.Color == ChessColor.LIGHT) ? ConsoleColor.White : ConsoleColor.Black;
+            }
+        }
+
+        /// <summary>
+        /// Colorizes the Console Buffer with normal colors.
+        /// </summary>
+        private void NormalConsoleColors()
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Green;
+        }
+
+        /// <summary>
+        /// Prints labels for each File { A - H }
+        /// </summary>
+        private void PrintFileLabels()
+        {
+            Console.Write("   ");
+            for (char f = MIN_FILE; f <= MAX_FILE; f++)
+            {
+                Console.Write(f + "  ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("\t  White");
+        }
+
+        #endregion
     }
 }

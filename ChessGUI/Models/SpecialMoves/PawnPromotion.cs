@@ -23,7 +23,11 @@ namespace ChessGUI.Models.SpecialMoves
                 if (pawn.CanPromote())
                 {
                     ChessSquare square = pawn.Location;
-                    square.Piece = new QueenChessPiece(square, pawn.Color);
+
+                    QueenChessPiece promotedPawnPiece = new QueenChessPiece(square, pawn.Color);
+                    square.Piece = promotedPawnPiece;
+                    ChessMovement.MovePiece = promotedPawnPiece;
+
                     Game.Controller.SquareViewFromSquare(square).PieceView.SetImageFromPiece(square.Piece);
 
                     //TODO try fix above so that method call is like:

@@ -1,5 +1,4 @@
-﻿using System;
-using Chess.Models.Base;
+﻿using Chess.Models.Base;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows;
@@ -7,10 +6,6 @@ using ChessGUI.Models.AI;
 using Chess.Models.Pieces;
 using ChessGUI.Models.SpecialMoves;
 using System.Windows.Media;
-using System.Threading;
-using System.Windows.Threading;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace ChessGUI.Controllers
 {
@@ -19,8 +14,6 @@ namespace ChessGUI.Controllers
     /// </summary>
     public class NewChessGame
     {
-        private bool _isGameOver;
-
         private List<SpecialMove> _specialMoves;
 
         public BasicAI AIPlayer { get; private set; }
@@ -40,7 +33,7 @@ namespace ChessGUI.Controllers
 
         private void Init()
         {
-            Debug.SHOW_MESSAGES = false;
+            Debug.SHOW_MESSAGES = true;
             ChessMovement.Game = this;
 
             InitSpecialMoves();
@@ -59,7 +52,7 @@ namespace ChessGUI.Controllers
 
             _specialMoves = new List<SpecialMove>()
             {
-                new EnPassant(), new KingInCheck(), new PawnPromotion(),
+                new EnPassant(), new PawnPromotion(), new KingInCheck(),
             };
         }
 
@@ -80,9 +73,7 @@ namespace ChessGUI.Controllers
                 {
                     await Task.Delay(50);
                 } while (!ActivePlayer.DidMove);
-
                 _specialMoves.ForEach(m => m.Check());
-                Controller.BoardView.Squares.ForEach(s => s.Background = Brushes.Red);
                 NextTurn();
             }
         }
@@ -90,48 +81,39 @@ namespace ChessGUI.Controllers
         private bool IsGameOver()
         {
             // TODO Check to see if king is in checkmate!
-            return IsCheckMate();
-            //return false;
+            return KingInCheck.IsCheckMate();
         }
 
-        private bool IsKingInCheck()
+        public void ToggleCheck(KingChessPiece king)
         {
-            KingChessPiece kingPiece = GetOpponent(ActivePlayer).KingPiece;
-
-            // list to hold all possible moves from all the pieces
-            List<ChessSquare> allMoves = new List<ChessSquare>();
-
-            // Populate with all moves that the player can make against the opponent
-            ChessPlayer opponent = ActivePlayer;
-            opponent.Pieces.ForEach(p => allMoves.AddRange(p.GetAvailableMoves()));
-
-            // check moves to see if any of them would land on the king
-            allMoves = allMoves.FindAll(s => (s == kingPiece.Location));
-            kingPiece.InCheck = (allMoves.Count > 0);
-
-            if (kingPiece.InCheck)
-            {
-                MessageBox.Show("IN CHECK");
-                Controller.SquareViewFromSquare(kingPiece.Location).ToggleCheck();
-            }
-            return kingPiece.InCheck;
+            int squareIndex = Controller.BoardModel.Squares.IndexOf(king.Location);
+            Controller.BoardView.Squares[squareIndex].ToggleCheck();
         }
 
-
-        
-        private bool IsCheckMate()
+        /// <summary>
+        /// Gets the enemy from the specified piece and returns a list of all possible
+        /// moves that the enemy could make.
+        /// </summary>
+        /// <param name="piece">Piece to check enemy against</param>
+        /// <returns>List containing all possible enemy moves</returns>
+        public List<ChessSquare> GetEnemyMoves(ChessPiece piece)
         {
-            bool isCheckMate = false;
-            KingChessPiece king = GetOpponent(ActivePlayer).KingPiece;
+            List<ChessSquare> enemyMoves = new List<ChessSquare>();
+            GetEnemyPieces(piece).ForEach(p => enemyMoves.AddRange(p.GetAvailableMoves()));
+            return enemyMoves;
+        }
 
-            List<ChessSquare> enemyMoves = Controller.BoardModel.GetEnemyMoves(king);
-
-            if (enemyMoves.Contains(king.Location) && (king.GetAvailableMoves().Count == 0))
-            {
-                MessageBox.Show("CHECKMATE!");
-                isCheckMate = true;
-            }
-            return isCheckMate;
+        /// <summary>
+        /// Gets all enemy pieces from the specified piece.
+        /// </summary>
+        /// <param name="piece">Piece to check enemy against</param>
+        /// <returns>List containing enemy pieces</returns>
+        public List<ChessPiece> GetEnemyPieces(ChessPiece piece)
+        {
+            List<ChessPiece> pieces = (piece.Color == ChessColor.LIGHT) ? 
+                                       Controller.BoardModel.DarkPieces : 
+                                       Controller.BoardModel.LightPieces;
+            return pieces;
         }
 
         /// <summary>
@@ -145,28 +127,11 @@ namespace ChessGUI.Controllers
             return opponent;
         }
 
-        /// <summary>
-        /// Checks to see if the last piece moved was a pawn and whether or not
-        /// it has reached its end rank position. If it reached, it is promoted.
-        /// </summary>
-        //private void CheckPawnPromotion()
-        //{
-        //    if (ChessMovement.MovePiece is PawnChessPiece)
-        //    {
-        //        PawnChessPiece pawn = ChessMovement.MovePiece as PawnChessPiece;
-        //        if (pawn.CanPromote())
-        //        {
-        //            ChessSquare square = pawn.Location;
-        //            square.Piece = new QueenChessPiece(square, pawn.Color);
-        //            //Controller.SquareViewFromSquare(square).PieceView.SetImageFromPiece(square.Piece);
-        //            Controller.UpdateSquareView(square, square.Piece);
-
-        //            // TODO create a promotion dialog to allow player to choose what they
-        //            // are promoted to. Right now it's just queen, which is the most common
-        //            // promotion!
-        //        }
-        //    }
-        //}
+        public bool IsActivePlayerPiece(ChessPiece piece)
+        {
+            bool isActivePlayerPiece = (piece.Color == ActivePlayer.Color);
+            return isActivePlayerPiece;
+        }
 
         /// <summary>
         /// Advances to the next Player so that they can take their turn.

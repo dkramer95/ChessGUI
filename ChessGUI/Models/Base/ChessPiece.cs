@@ -1,4 +1,5 @@
-﻿using ChessGUI.Models.Utils;
+﻿using ChessGUI.Models.SpecialMoves;
+using ChessGUI.Models.Utils;
 using System.Collections.Generic;
 
 namespace Chess.Models.Base
@@ -78,7 +79,6 @@ namespace Chess.Models.Base
         /// <returns>List of available ChessSquare locations to legally move to</returns>
         public virtual List<ChessSquare> GetAvailableMoves()
         {
-            //List<ChessSquare> available = new BoardScanner(this).Scan();
             List<ChessSquare> available = BoardScanner.Scan(this);
             return available;
         }
@@ -125,7 +125,8 @@ namespace Chess.Models.Base
         /// <returns>true if ChessPiece is an opponent</returns>
         public bool IsOpponent(ChessPiece piece)
         {
-            return piece.Color != Color;
+            bool isOpponent = (piece.Color != Color);
+            return isOpponent;
         }
 
         /// <summary>
@@ -136,7 +137,8 @@ namespace Chess.Models.Base
         /// <returns>true if this ChessPiece can occupy the specified ChessSquare</returns>
         public bool CanOccupy(ChessSquare square)
         {
-            return !square.IsOccupied() || (square.IsOccupied() && IsOpponent(square.Piece));
+            bool canOccupy = !square.IsOccupied() || (square.IsOccupied() && IsOpponent(square.Piece));
+            return canOccupy;
         }
 
         /// <summary>

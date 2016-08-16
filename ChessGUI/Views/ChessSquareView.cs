@@ -78,7 +78,10 @@ namespace ChessGUI.Views
         /// </summary>
         public void ResetBackground()
         {
-            Background = _bgColor;
+            if (Background == SquareStyles.PREVIEW_COLOR || Background == SquareStyles.HIGHLIGHT_COLOR)
+            {
+                Background = _bgColor;
+            }
         }
     }
 }

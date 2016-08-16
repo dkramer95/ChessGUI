@@ -182,6 +182,7 @@ namespace ChessGUI.Models.Utils
             Piece = piece;
             Pivot = piece.Location;
             Limit = limit;
+            Piece.AvailableCaptures.Clear();
             ResetStart();
         }
 
