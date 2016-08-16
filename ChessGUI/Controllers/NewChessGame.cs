@@ -90,7 +90,8 @@ namespace ChessGUI.Controllers
         private bool IsGameOver()
         {
             // TODO Check to see if king is in checkmate!
-            return false;
+            return IsCheckMate();
+            //return false;
         }
 
         private bool IsKingInCheck()
@@ -114,6 +115,23 @@ namespace ChessGUI.Controllers
                 Controller.SquareViewFromSquare(kingPiece.Location).ToggleCheck();
             }
             return kingPiece.InCheck;
+        }
+
+
+        
+        private bool IsCheckMate()
+        {
+            bool isCheckMate = false;
+            KingChessPiece king = GetOpponent(ActivePlayer).KingPiece;
+
+            List<ChessSquare> enemyMoves = Controller.BoardModel.GetEnemyMoves(king);
+
+            if (enemyMoves.Contains(king.Location) && (king.GetAvailableMoves().Count == 0))
+            {
+                MessageBox.Show("CHECKMATE!");
+                isCheckMate = true;
+            }
+            return isCheckMate;
         }
 
         /// <summary>

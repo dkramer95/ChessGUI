@@ -176,10 +176,14 @@ namespace Chess.Models.Base
                 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
             };
 
-            // Flip Piece layout for LIGHT ChessPieces (at the btm)
             if (color == ChessColor.LIGHT)
             {
-                pieceLayout.Reverse();
+                pieceLayout = new List<char>()
+                {
+                    'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
+                    'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R',
+                };
+
             }
             return pieceLayout;
         }
