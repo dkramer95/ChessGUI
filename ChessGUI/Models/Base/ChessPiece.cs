@@ -1,7 +1,4 @@
-﻿using Chess.Models.Utils;
-using ChessGUI.Models.SpecialMoves;
-using ChessGUI.Models.Utils;
-using System;
+﻿using ChessGUI.Models.Utils;
 using System.Collections.Generic;
 
 namespace Chess.Models.Base

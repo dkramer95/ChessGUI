@@ -51,13 +51,12 @@ namespace Chess.Models.Pieces
             return Color + "_King";
         }
 
-        //public override List<ChessSquare> GetAvailableMoves()
-        //{
-        //    //List<ChessSquare> available = new BoardScanner(this, 1).Scan();
-        //    List<ChessSquare> available = null;
-        //    // filter out moves that would put this king in check
-        //    KingInCheck.RemoveUnsafe(this, ref available);
-        //    return available;
-        //}
+        public override List<ChessSquare> GetAvailableMoves()
+        {
+            List<ChessSquare> available = BoardScanner.Scan(this, 1);
+            // filter out moves that would put this king in check
+            //KingInCheck.RemoveUnsafe(this, ref available);
+            return available;
+        }
     }
 }

@@ -129,6 +129,7 @@ namespace ChessGUI.Models.SpecialMoves
         {
             if (Game.ActivePlayer.KingPiece == king)
             {
+                MessageBox.Show("Remove unsafe!");
                 List<ChessSquare> safeKingMoves = new List<ChessSquare>();
                 // preserve existing pieces so that we can revert back
                 IDictionary<ChessSquare, ChessPiece> originalSquares = new Dictionary<ChessSquare, ChessPiece>();

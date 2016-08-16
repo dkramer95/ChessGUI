@@ -1,9 +1,7 @@
-﻿using Chess.Models.Utils;
-using ChessGUI.Models.Utils;
+﻿using ChessGUI.Models.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Chess.Models.Base
 {

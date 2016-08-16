@@ -26,10 +26,10 @@ namespace ChessGUI.Models.Utils
         public static Move[] HORIZ_VERT = { north, south, east, west };
 
         public static Move[] DIAGONAL = { northEast, northWest,
-                                          southWest, southWest }; 
+                                          southEast, southWest }; 
 
         public static Move[] ALL = { north, south, east, west, northEast,
-                                     northWest, southWest, southWest };
+                                     northWest, southEast, southWest };
     }
 
     public struct Move
