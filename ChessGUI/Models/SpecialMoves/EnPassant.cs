@@ -2,6 +2,7 @@
 using Chess.Models.Pieces;
 using ChessGUI.Controllers;
 using System.Linq;
+using System.Windows;
 
 namespace ChessGUI.Models.SpecialMoves
 {
@@ -27,9 +28,9 @@ namespace ChessGUI.Models.SpecialMoves
         /// </summary>
         private static void CheckCapture()
         {
-            if (ChessMovement.MovePiece is PawnChessPiece)
+            if (MovementController.MovePiece is PawnChessPiece)
             {
-                PawnChessPiece pawn = ChessMovement.MovePiece as PawnChessPiece;
+                PawnChessPiece pawn = MovementController.MovePiece as PawnChessPiece;
 
                 if (DidMoveTwoRanks(pawn))
                 {
@@ -66,10 +67,14 @@ namespace ChessGUI.Models.SpecialMoves
         /// <param name="pawn"></param>
         private static void UpdateCapture(PawnChessPiece pawn)
         {
-            Game.Controller.UpdateSquareView(MovedPawn.Location, null);
-            CaptureSquare.Piece = pawn;
-            CaptureSquare = null;
-            Clear();
+            if (MovedPawn != null)
+            {
+                Game.Controller.UpdateSquareView(MovedPawn.Location, null);
+                MovedPawn.Location.ClearPiece();
+                MovedPawn.IsCaptured = true;
+                MovedPawn = null;
+                CaptureSquare.Piece = pawn;
+            }
         }
 
         /// <summary>

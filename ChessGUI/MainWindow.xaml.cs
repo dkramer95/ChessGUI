@@ -8,8 +8,7 @@ namespace ChessGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        //private ChessBoardController _controller;
-        private NewChessGame _game;
+        private ChessGame _game;
 
         public MainWindow()
         {
@@ -19,11 +18,8 @@ namespace ChessGUI
 
         private void Init()
         {
-            //_controller = new ChessBoardController();
-            //Content = _controller.BoardView;
-
-            _game = new NewChessGame();
-            Content = _game.Controller.BoardView;
+            _game = new ChessGame();
+            boardPanel.Children.Add(_game.Controller.BoardView);
         }
     }
 }

@@ -12,11 +12,11 @@ namespace ChessGUI.Views
     public class ChessBoardView : UniformGrid
     {
         public List<ChessSquareView> Squares { get; private set; }
+
         public ChessBoardView()
         {
             Columns = ChessBoard.COL_COUNT;
             Rows    = ChessBoard.ROW_COUNT;
-
             Squares = new List<ChessSquareView>();
         }
 

@@ -13,7 +13,7 @@ namespace ChessGUI.Models.SpecialMoves
     public abstract class SpecialMove
     {
         private static bool _isInitialized;
-        public static NewChessGame Game { get; set; }
+        public static ChessGame Game { get; protected set; }
 
         public SpecialMove()
         {
@@ -23,7 +23,12 @@ namespace ChessGUI.Models.SpecialMoves
             }
         }
 
-        public static void Init(NewChessGame game)
+        /// <summary>
+        /// Initializes all special moves so that they can communicate with
+        /// the ChessGame.
+        /// </summary>
+        /// <param name="game"></param>
+        public static void Init(ChessGame game)
         {
             if (game != null)
             {
@@ -32,6 +37,9 @@ namespace ChessGUI.Models.SpecialMoves
             }
         }
 
+        /// <summary>
+        /// Method to be implemented to check for a special move occurrence.
+        /// </summary>
         public abstract void Check();
     }
 }

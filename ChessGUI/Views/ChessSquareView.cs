@@ -14,6 +14,8 @@ namespace ChessGUI.Views
         // Preserve original color, for cases of highlighting
         private Brush _bgColor;
 
+        public bool IsHighlighted { get; private set; }
+
         // ChessSquare image graphic
         public ChessPieceView PieceView { get; set; }
 
@@ -57,7 +59,8 @@ namespace ChessGUI.Views
         /// </summary>
         public void ToggleHighlight()
         {
-            Background = (Background == SquareStyles.HIGHLIGHT_COLOR) ? _bgColor : SquareStyles.HIGHLIGHT_COLOR;
+            IsHighlighted = (IsHighlighted) ? false : true;
+            Background = (IsHighlighted) ? SquareStyles.HIGHLIGHT_COLOR : _bgColor;
         }
 
         /// <summary>
@@ -78,10 +81,7 @@ namespace ChessGUI.Views
         /// </summary>
         public void ResetBackground()
         {
-            if (Background == SquareStyles.PREVIEW_COLOR || Background == SquareStyles.HIGHLIGHT_COLOR)
-            {
-                Background = _bgColor;
-            }
+            Background = _bgColor;
         }
     }
 }

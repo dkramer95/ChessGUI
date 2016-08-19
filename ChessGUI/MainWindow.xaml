@@ -4,8 +4,39 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChessGUI"
+        xmlns:uc="clr-namespace:ChessGUI.Views"
         mc:Ignorable="d"
-        Title="PRO100 Chess by David Kramer" Height="600" Width="600" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="PRO100 Chess by David Kramer" Height="700" Width="700" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    
     <DockPanel x:Name="mainPanel">
+        <DockPanel.Resources>
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Style>
+        </DockPanel.Resources>
+
+        <uc:FileLabelPanel DockPanel.Dock="Top"
+                           Width="{Binding ElementName=boardPanel, Path=Width}"/>
+
+        <uc:FileLabelPanel DockPanel.Dock="Bottom"
+                           Width="{Binding ElementName=boardPanel, Path=Width}"/>
+
+        <uc:RankLabelPanel DockPanel.Dock="Left"
+                           Width="40"
+                           HorizontalContentAlignment="Right"/>
+
+        <uc:RankLabelPanel DockPanel.Dock="Right"
+                           Width="40"
+                           HorizontalContentAlignment="Left"/>
+
+        <DockPanel x:Name="boardPanel"
+                    Width="600"
+                    Height="600"
+                    Background="Magenta"
+                    LastChildFill="True"/>
     </DockPanel>
 </Window>

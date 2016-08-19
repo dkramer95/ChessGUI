@@ -28,8 +28,11 @@ namespace Chess.Models.Base
         // Amount of moves this ChessPiece has made
         public int MoveCount { get; protected set; }
 
+        // Should this ChessPiece be ignored?
+        public bool Ignore { get; set; }
+
         // Has this ChessPiece been captured by another ChessPiece?
-        public bool IsCaptured { get; protected set; }
+        public bool IsCaptured { get; set; }
 
         // Other ChessPieces that this ChessPiece can capture
         public List<ChessPiece> AvailableCaptures { get; private set; }
@@ -109,7 +112,7 @@ namespace Chess.Models.Base
             if (IsOpponent(pieceToCapture))
             {
                 pieceToCapture.IsCaptured = true;
-                didCapture = true;
+                pieceToCapture.Location.Piece = this;
                 Debug.PrintMsg(this + " captured: " + pieceToCapture);
             } else
             {

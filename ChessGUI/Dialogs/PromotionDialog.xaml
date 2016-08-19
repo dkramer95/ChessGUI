@@ -6,9 +6,38 @@
              xmlns:local="clr-namespace:ChessGUI.Dialogs"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <DockPanel>
-        <ListBox>
-            <!-- TODO add piece selection box here! -->
-        </ListBox>
-    </DockPanel>
+    <StackPanel x:Name="contentPanel">
+        <Label x:Name="titleLabel"
+               Content="Select Promotion Piece"
+               FontSize="20"
+               HorizontalContentAlignment="Center"
+               Margin="20 10"/>
+        
+        <RadioButton x:Name="queenRadioBtn"
+                     Content="Queen"
+                     Margin="15"
+                     IsChecked="True"
+                     GroupName="Promotion"/>
+
+        <RadioButton x:Name="bishopRadioBtn"
+                     Content="Bishop"
+                     Margin="15"
+                     GroupName="Promotion"/>
+
+        <RadioButton x:Name="rookRadioBtn"
+                     Content="Rook"
+                     Margin="15"
+                     GroupName="Promotion"/>
+
+        <RadioButton x:Name="knightRadioBtn"
+                     Content="Knight"
+                     Margin="15"
+                     GroupName="Promotion"/>
+
+        <Button x:Name="promoteBtn"
+                Content="Promote!"
+                Margin="10"
+                Height="35"
+                Click="promoteBtn_Click"/>
+    </StackPanel>
 </UserControl>

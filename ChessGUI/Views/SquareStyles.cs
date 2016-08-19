@@ -18,7 +18,7 @@ namespace ChessGUI.Views
         public static Brush CHECK_COLOR = Brushes.Red;
 
         // Background ChessSquare styles
-        public static Brush BRUSH_LIGHT = Brushes.White;
-        public static Brush BRUSH_DARK = Brushes.DarkGray;
+        public static Brush BRUSH_LIGHT = Brushes.AliceBlue;
+        public static Brush BRUSH_DARK = Brushes.DeepSkyBlue;
     }
 }

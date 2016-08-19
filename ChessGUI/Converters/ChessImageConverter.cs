@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 
 namespace ChessGUI.Converters
 {
+    [Obsolete]
     class ChessImageConverter : IValueConverter
     {
         // Convert a chess piece to its appropriate image

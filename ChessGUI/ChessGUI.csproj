@@ -77,8 +77,8 @@
     <Compile Include="Commands\MoveSingleCommand.cs" />
     <Compile Include="Commands\PlaceCommand.cs" />
     <Compile Include="Controllers\ChessBoardController.cs" />
-    <Compile Include="Controllers\ChessMovement.cs" />
-    <Compile Include="Controllers\NewChessGame.cs" />
+    <Compile Include="Controllers\MovementController.cs" />
+    <Compile Include="Controllers\ChessGame.cs" />
     <Compile Include="Converters\ChessImageConverter.cs" />
     <Compile Include="Dialogs\PromotionDialog.xaml.cs">
       <DependentUpon>PromotionDialog.xaml</DependentUpon>
@@ -90,6 +90,12 @@
     <Compile Include="Models\SpecialMoves\SpecialMove.cs" />
     <Compile Include="Models\Utils\Moves.cs" />
     <Compile Include="Models\Utils\BoardScanner.cs" />
+    <Compile Include="Views\FileLabelPanel.xaml.cs">
+      <DependentUpon>FileLabelPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RankLabelPanel.xaml.cs">
+      <DependentUpon>RankLabelPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ChessBoardView.cs" />
     <Compile Include="Views\ChessPieceView.cs" />
     <Compile Include="Views\ChessSquareView.cs" />
@@ -110,11 +116,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\FileLabelPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RankLabelPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Base\ChessBoard.cs" />
     <Compile Include="Models\Base\ChessColor.cs" />
-    <Compile Include="Models\Base\ChessGame.cs" />
     <Compile Include="Models\Base\ChessPiece.cs" />
     <Compile Include="Models\Base\ChessPlayer.cs" />
     <Compile Include="Models\Base\ChessSquare.cs" />

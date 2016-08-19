@@ -1,9 +1,5 @@
 ﻿using Chess.Models.Pieces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chess.Models.Base
 {
@@ -19,9 +15,6 @@ namespace Chess.Models.Base
         public ChessPiece ActivePiece { get; set; }
 
         public ChessColor Color { get; private set; }
-
-        // Is it this ChessPlayer's current move?
-        public bool IsCurrentMove { get; set; }
 
         // Have we moved for the current round
         public bool DidMove { get; set; }

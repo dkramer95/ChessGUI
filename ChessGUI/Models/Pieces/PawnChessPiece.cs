@@ -76,9 +76,12 @@ namespace Chess.Models.Pieces
         {
             int limit = (MoveCount == 0) ? 2 : 1;
 
+            // Scan vertically and remove any squares where we are blocked
             List<ChessSquare> available = BoardScanner.Scan(this, limit);
-            List<ChessSquare> diagonals = BoardScanner.GetDiagonals(Location, MoveDirections[0]);
+            available.RemoveAll(s => s.IsOccupied());
 
+            // Get diagonals and remove any ChessSquares where there is no opponent to capture
+            List<ChessSquare> diagonals = BoardScanner.GetDiagonals(Location, MoveDirections[0]);
             diagonals.RemoveAll(s => (!s.IsOccupied() || !IsOpponent(s.Piece)));
             available.AddRange(diagonals);
 

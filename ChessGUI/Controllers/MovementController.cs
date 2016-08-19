@@ -1,16 +1,16 @@
 ﻿using Chess.Models.Base;
 using Chess.Models.Pieces;
-using ChessGUI.Models.SpecialMoves;
 using ChessGUI.Views;
 using System.Collections.Generic;
 using System.Windows;
+using System;
 
 namespace ChessGUI.Controllers
 {
     /// <summary>
     /// Helper class for handling ChessPiece movement from Square_A to Square_B.
     /// </summary>
-    public class ChessMovement
+    public class MovementController
     {
         // Starting ChessSquare
         private static ChessSquare _startSquare;
@@ -26,7 +26,7 @@ namespace ChessGUI.Controllers
         // Player whose turn it is.
         public static ChessPlayer ActivePlayer { get; set; }
 
-        public static NewChessGame Game { get; set; }
+        public static ChessGame Game { get; set; }
 
         /// <summary>
         /// Updates Start and End positions and ensures that the starting position
@@ -38,8 +38,7 @@ namespace ChessGUI.Controllers
             if (Start == null)
             {
                 SetStart(squareView);
-            }
-            else
+            } else
             {
                 SetEnd(squareView);
                 if (CheckMove())
@@ -66,20 +65,20 @@ namespace ChessGUI.Controllers
         }
 
         /// <summary>
-        /// Checks to see if we can move and updates ChessSquare and piece models.
+        /// Checks to make sure that the ChessSquare that we're moving too
+        /// is valid.
         /// </summary>
         /// <returns></returns>
         private static bool CheckMove()
         {
             bool canMove = false;
-
+            // Check to make sure we have a ChessPiece to move and a destination
             if (IsStartAndEndSet())
             {
-                // Is EndSquare a valid place to move to?
-                List<ChessSquare> available = MovePiece.GetAvailableMoves();
-                KingInCheck.TestMoves(MovePiece, ref available);
+                List<ChessSquare> validMoves = 
+                    GetValidMoves(MovePiece, ActivePlayer.KingPiece, Game.GetOpponent());
 
-                if (available.Contains(_endSquare))
+                if (validMoves.Contains(_endSquare))
                 {
                     canMove = true;
                 }
@@ -87,20 +86,69 @@ namespace ChessGUI.Controllers
             return canMove;
         }
 
-        private static bool IsKingInCheck()
+        /// <summary>
+        /// Gets a list of all valid moves for the specified ChessPiece where
+        /// by moving, they do NOT allow the ActivePlayer's king to be
+        /// put in check.
+        /// </summary>
+        /// <param name="movePiece">ChessPiece to check moves against</param>
+        /// <param name="king">KingChessPiece we're trying to keep safe</param>
+        /// <returns>List containing all valid moves for ChessPiece</returns>
+        public static List<ChessSquare> GetValidMoves(ChessPiece movePiece, KingChessPiece king, ChessPlayer enemy)
         {
-            KingChessPiece king = ActivePlayer.KingPiece;
-            List<ChessSquare> opponentMoves = new List<ChessSquare>();
+            List<ChessSquare> validMoves = new List<ChessSquare>();
+            List<ChessSquare> available = movePiece.GetAvailableMoves();
 
-            // Populate with all moves that an opponent can make against player
-            ChessPlayer opponent = Game.GetOpponent(ActivePlayer);
-            opponent.Pieces.ForEach(p => opponentMoves.AddRange(p.GetAvailableMoves()));
+            SetClear(movePiece, king, true);
 
-            // Check to see if any opponent moves would put king in check
-            opponentMoves = opponentMoves.FindAll(s => (s == king.Location));
-            king.InCheck = (opponentMoves.Count > 0);
+            // For every move, check to see if it puts the ActivePlayer's King
+            // in check. If it does, it is not a valid move!
+            available.ForEach(s =>
+            {
+                // Possible pre-existing ChessPiece that we would capture, if we move here
+                // Ignore this piece, so it is not included in the enemy moves
+                ChessPiece original = s.Piece;
+                SetIgnore(original, true);
+                s.Piece = movePiece;
 
-            return king.InCheck;
+                List<ChessSquare> enemyMoves = Game.GetPlayerMoves(enemy);
+
+                // Location that we don't want our enemy moves to contain as it
+                // means the King is vulnerable
+                ChessSquare checkSquare = (movePiece != king) ? king.Location : s;
+
+                // Square is safe to move to
+                if (!enemyMoves.Contains(checkSquare))
+                {
+                    validMoves.Add(s);
+                }
+                SetIgnore(original, false);
+                s.Piece = original;
+            });
+            SetClear(movePiece, king, false);
+            return validMoves;
+        }
+
+        private static void SetClear(ChessPiece movePiece, KingChessPiece king, bool clearFlag)
+        {
+            if (movePiece != king)
+            {
+                if (clearFlag)
+                {
+                    movePiece.Location.ClearPiece();
+                } else
+                {
+                    movePiece.Location.Piece = movePiece;
+                }
+            }
+        }
+
+        private static void SetIgnore(ChessPiece pieceToIgnore, bool ignoreFlag)
+        {
+            if (pieceToIgnore != null)
+            {
+                pieceToIgnore.Ignore = ignoreFlag;
+            }
         }
         
         /// <summary>
@@ -178,6 +226,7 @@ namespace ChessGUI.Controllers
             {
                 Start.ToggleHighlight();
             }
+            Game.Controller.ClearPreviews();
             Start = null;
             End = null;
         }

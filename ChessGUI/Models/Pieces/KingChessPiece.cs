@@ -54,8 +54,6 @@ namespace Chess.Models.Pieces
         public override List<ChessSquare> GetAvailableMoves()
         {
             List<ChessSquare> available = BoardScanner.Scan(this, 1);
-            // filter out moves that would put this king in check
-            KingInCheck.RemoveUnsafe(this, ref available);
             return available;
         }
     }

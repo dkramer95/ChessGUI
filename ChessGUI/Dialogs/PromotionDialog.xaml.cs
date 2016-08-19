@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ChessGUI.Controllers;
+using ChessGUI.Models.SpecialMoves;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,32 @@ namespace ChessGUI.Dialogs
     /// </summary>
     public partial class PromotionDialog : UserControl
     {
-        public PromotionDialog()
+        public ChessGame Game { get; private set; }
+        public PromotionDialog(ChessGame game)
         {
             InitializeComponent();
+            Game = game;
+        }
+
+        private void promoteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var checkedButton = contentPanel.Children.OfType<RadioButton>().FirstOrDefault(r => (bool)r.IsChecked);
+
+            // use char from name for ChessPiece factory
+            string name = checkedButton.Content.ToString();
+            char symbol = (checkedButton != knightRadioBtn) ? name[0] : name[1];
+
+            PawnPromotion.SetPromotionFromSymbol(symbol);
+            DismissDialog();
+        }
+
+        /// <summary>
+        /// Dismisses this Promotion Dialog.
+        /// </summary>
+        private void DismissDialog()
+        {
+            Window w = (Window)Parent;
+            w.Close();
         }
     }
 }

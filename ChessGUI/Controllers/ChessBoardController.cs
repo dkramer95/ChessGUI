@@ -3,10 +3,9 @@ using ChessGUI.Views;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
-using System.Collections.Generic;
 using System;
-using System.Windows.Data;
-using ChessGUI.Converters;
+using System.Text;
+using System.Collections.Generic;
 
 namespace ChessGUI.Controllers
 {
@@ -19,6 +18,7 @@ namespace ChessGUI.Controllers
         public ChessBoardView BoardView { get; set; }
         public ChessBoard BoardModel { get; set; }
 
+
         public ChessBoardController()
         {
             BoardView = new ChessBoardView();
@@ -26,14 +26,22 @@ namespace ChessGUI.Controllers
             Init();
         }
 
+        /// <summary>
+        /// Initializes the model and the view.
+        /// </summary>
         private void Init()
         {
             BoardModel.Init();
             CreateGrid();
             BoardView.KeyDown += BoardView_KeyDown;
+            BoardView.Focus();
         }
 
-
+        /// <summary>
+        /// Hot keys support for debug operations.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BoardView_KeyDown(object sender, KeyEventArgs e)
         {
             // show preview of moves we can make
@@ -41,18 +49,51 @@ namespace ChessGUI.Controllers
             {
                 ShowMovesPreview();
             }
-        }
 
-        private void ShowMovesPreview()
-        {
-            if (ChessMovement.Start != null)
+            if (e.Key == Key.F8)
             {
-                ChessSquare start = ChessMovement.Start.DataContext as ChessSquare;
-                List<ChessSquare> moves = start.Piece.GetAvailableMoves();
-                moves.ForEach(s => SquareViewFromSquare(s).TogglePreview());
+                PrintBoardDebug();
             }
         }
 
+        public void PrintBoardDebug()
+        {
+            StringBuilder sb = new StringBuilder();
+            List<ChessSquare> squares = BoardModel.Squares;
+            squares.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            squares.ForEach(s =>
+            {
+                sb.Append(string.Format("Square {0} contains {1}\n", s, s.Piece));
+            });
+            MessageBox.Show(sb.ToString(), "Board Info");
+        }
+
+        [Obsolete]
+        /// <summary>
+        /// Toggles the highlight of each square that the active ChessMovement
+        /// ChessPiece can move to.
+        /// </summary>
+        private void ShowMovesPreview()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Clears out all ChessSquareView previews, if they're currently highlighted.
+        /// </summary>
+        public void ClearPreviews()
+        {
+            BoardView.Squares.FindAll(s => s.IsHighlighted).ForEach(s => s.ToggleHighlight());
+        }
+
+        /// <summary>
+        /// Updates the SquareView of the specifed square. If the specified
+        /// piece is not null, it assigns its image to the square view, otherwise
+        /// the square piece is cleared out.
+        /// </summary>
+        /// <param name="squareToUpdate">ChessSquare to update</param>
+        /// <param name="piece">Piece to assign to ChessSquareView</param>
         public void UpdateSquareView(ChessSquare squareToUpdate, ChessPiece piece)
         {
             ChessSquareView squareView = SquareViewFromSquare(squareToUpdate);
@@ -98,7 +139,6 @@ namespace ChessGUI.Controllers
                     squareView.PieceView.SetImagePath(imgPath);
                 }
                 // Add Square to the BoardView uniform grid
-                //BoardView.Children.Add(squareView);
                 BoardView.AddSquare(squareView);
                 AddClickEvents(square, squareView);
             });
@@ -114,18 +154,6 @@ namespace ChessGUI.Controllers
             squareView.DataContext = squareModel;
             squareView.Click += Square_Click;
             squareView.MouseRightButtonDown += Square_RightClick;
-
-
-            ///// TESTING ///
-            //// Bind image square to board model square
-            //ChessPieceView pieceView = squareView.PieceView;
-            //Binding pieceViewBinding = new Binding("Piece");
-            //squareView.DataContext = squareModel;
-            //pieceView.DataContext = squareModel;
-            //pieceViewBinding.Mode = BindingMode.TwoWay;
-            //pieceViewBinding.Converter = new ChessImageConverter();
-            //pieceView.SetBinding(ChessPieceView.BackgroundProperty, pieceViewBinding);
-            ///// TESTING ///
         }
 
         /// <summary>
@@ -135,7 +163,7 @@ namespace ChessGUI.Controllers
         /// <param name="e"></param>
         private void Square_RightClick(object sender, MouseButtonEventArgs e)
         {
-            ChessMovement.Clear();
+            MovementController.Clear();
         }
 
         /// <summary>
@@ -146,7 +174,7 @@ namespace ChessGUI.Controllers
         private void Square_Click(object sender, RoutedEventArgs e)
         {
             ChessSquareView squareView = sender as ChessSquareView;
-            ChessMovement.Move(squareView);
+            MovementController.Move(squareView);
         }
     }
 }

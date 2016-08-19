@@ -68,6 +68,7 @@ namespace ChessGUI.Models.Utils
                     j++;
                     nextSquare = NextSquare();
 
+                    // Add if opponent, then break, otherwise just break
                     if (nextSquare.IsOccupied())
                     {
                         if (Piece.IsOpponent(nextSquare.Piece))
@@ -102,6 +103,7 @@ namespace ChessGUI.Models.Utils
                 CurrentDirection = d;
                 int j = 0;
 
+                // scan in current direction until we reach limit
                 while (HasNext() && j < Limit)
                 {
                     j++;
