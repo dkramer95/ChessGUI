@@ -83,7 +83,9 @@
     <Compile Include="Dialogs\PromotionDialog.xaml.cs">
       <DependentUpon>PromotionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\AI\AdvancedAI.cs" />
     <Compile Include="Models\AI\BasicAI.cs" />
+    <Compile Include="Models\SpecialMoves\Castling.cs" />
     <Compile Include="Models\SpecialMoves\EnPassant.cs" />
     <Compile Include="Models\SpecialMoves\KingInCheck.cs" />
     <Compile Include="Models\SpecialMoves\PawnPromotion.cs" />

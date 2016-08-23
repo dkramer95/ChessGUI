@@ -18,13 +18,13 @@ namespace ChessGUI.Controllers
     /// </summary>
     public class ChessGame
     {
-        private bool _isGameOver;
-
         private List<SpecialMove> _specialMoves;
 
         public ChessBoardController Controller { get; private set; }
+
         public ChessPlayer LightPlayer { get; private set; }
         public ChessPlayer DarkPlayer { get; private set; }
+        
         // Very basic AI test player
         public BasicAI AIPlayer { get; private set; }
 
@@ -65,7 +65,7 @@ namespace ChessGUI.Controllers
 
             _specialMoves = new List<SpecialMove>()
             {
-                new EnPassant(), new PawnPromotion(),
+                new KingCheck(), new EnPassant(), new PawnPromotion(),
             };
         }
 
@@ -87,47 +87,45 @@ namespace ChessGUI.Controllers
         /// </summary>
         private async void Play()
         {
-            while (!_isGameOver)
+            while (!IsCheckMate())
             {
-                //Controller.PrintBoardDebug();
-                if (IsCheckMate())
-                {
-                    MessageBox.Show("CHECKMATE!");
-                    _isGameOver = true;
-                    break;
-                }
                 do
                 {
                     await Task.Delay(50);
                 } while (!ActivePlayer.DidMove);
-
-                //TODO:: after player has moved, check to see if we are in CHECKMATE!!!
-                // IF WE ARE, THEN GAME IS OVER!!
                 _specialMoves.ForEach(m => m.Check());
                 NextTurn();
             }
+            MessageBox.Show("CheckMate!", "Game Over");
+            Controller.DisableView();
+            Reset();
         }
 
+        /// <summary>
+        /// Resets this ChessGame back to its initial starting context.
+        /// </summary>
+        private void Reset()
+        {
+            Init();
+            BeginGame();
+        }
+
+        /// <summary>
+        /// Checks to see if we have reached CheckMate. If we have, then
+        /// this ChessGame is over.
+        /// </summary>
+        /// <returns></returns>
         private bool IsCheckMate()
         {
             List<ChessSquare> validMoves = new List<ChessSquare>();
             List<ChessPiece> playerPieces = GetPlayerPieces(ActivePlayer);
 
-            //StringBuilder sb = new StringBuilder();
-
             playerPieces.ForEach(p =>
             {
-                //sb.Append(p + " can move to: ");
-
                 List<ChessSquare> movesForPiece = 
                     MovementController.GetValidMoves(p, ActivePlayer.KingPiece, GetOpponent());
                 validMoves.AddRange(movesForPiece);
-
-                //movesForPiece.ForEach(s => sb.Append(s + ", "));
-                //sb.Append("\n");
             });
-            //MessageBox.Show(sb.ToString(), "Valid Moves");
-
             bool isCheckMate = (validMoves.Count == 0);
             return isCheckMate;
         }

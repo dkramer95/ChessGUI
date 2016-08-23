@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Chess.Models.Base;
+using Chess.Models.Pieces;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace ChessGUI.Models.SpecialMoves
 {
@@ -12,7 +16,24 @@ namespace ChessGUI.Models.SpecialMoves
     {
         public override void Check()
         {
-            throw new NotImplementedException();
+            IsInCheck();
+        }
+
+        public static bool IsInCheck()
+        {
+            KingChessPiece king = Game.GetOpponent().KingPiece;
+            List<ChessSquare> playerMoves = Game.GetPlayerMoves(Game.ActivePlayer);
+
+            if (playerMoves.Contains(king.Location))
+            {
+                MessageBox.Show(king + " is in check!");
+                king.InCheck = true;
+            } else
+            {
+                king.InCheck = false;
+            }
+
+            return king.InCheck;
         }
     }
 }

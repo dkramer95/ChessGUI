@@ -3,7 +3,7 @@ using Chess.Models.Pieces;
 using ChessGUI.Views;
 using System.Collections.Generic;
 using System.Windows;
-using System;
+using ChessGUI.Models.SpecialMoves;
 
 namespace ChessGUI.Controllers
 {
@@ -13,11 +13,11 @@ namespace ChessGUI.Controllers
     public class MovementController
     {
         // Starting ChessSquare
-        private static ChessSquare _startSquare;
+        public static ChessSquare StartSquare { get; private set; }
         public static ChessSquareView Start { get; private set; }
 
         // Ending ChessSquare
-        private static ChessSquare _endSquare;
+        public static ChessSquare EndSquare { get; private set; }
         public static ChessSquareView End { get; private set; }
 
         // The piece we're moving
@@ -27,6 +27,7 @@ namespace ChessGUI.Controllers
         public static ChessPlayer ActivePlayer { get; set; }
 
         public static ChessGame Game { get; set; }
+
 
         /// <summary>
         /// Updates Start and End positions and ensures that the starting position
@@ -43,7 +44,7 @@ namespace ChessGUI.Controllers
                 SetEnd(squareView);
                 if (CheckMove())
                 {
-                    MovePiece.MoveTo(_endSquare);
+                    MovePiece.MoveTo(EndSquare);
                     ActivePlayer.DidMove = true;
                     ClearMovement();
                 } else
@@ -78,12 +79,21 @@ namespace ChessGUI.Controllers
                 List<ChessSquare> validMoves = 
                     GetValidMoves(MovePiece, ActivePlayer.KingPiece, Game.GetOpponent());
 
-                if (validMoves.Contains(_endSquare))
+                if (validMoves.Contains(EndSquare))
                 {
                     canMove = true;
                 }
             }
             return canMove;
+        }
+
+        private static void CheckCastling(ref List<ChessSquare> validMoves)
+        {
+            if (MovePiece is KingChessPiece)
+            {
+                KingChessPiece king = MovePiece as KingChessPiece;
+                Castling.CheckCastling(king, ref validMoves);
+            }
         }
 
         /// <summary>
@@ -126,9 +136,33 @@ namespace ChessGUI.Controllers
                 s.Piece = original;
             });
             SetClear(movePiece, king, false);
+
+            // check for castling and add moves if king can castle
+            if (MovePiece is KingChessPiece)
+            {
+                CheckCastling(ref validMoves);
+            }
             return validMoves;
         }
 
+        /// <summary>
+        /// Convenience method for getting a list of valid moves for the 
+        /// ActivePlayer and the Active MovePiece.
+        /// </summary>
+        /// <returns>List containing all valid moves for the active MovePiece</returns>
+        public static List<ChessSquare> GetCurrentValidMoves()
+        {
+            List<ChessSquare> validMoves = 
+                GetValidMoves(MovePiece, ActivePlayer.KingPiece, Game.GetOpponent());
+            return validMoves;
+        }
+
+        /// <summary>
+        /// Clears out or fills the movePiece's location.
+        /// </summary>
+        /// <param name="movePiece">MovePiece</param>
+        /// <param name="king">KingPiece</param>
+        /// <param name="clearFlag">flag to control clearing or occupying</param>
         private static void SetClear(ChessPiece movePiece, KingChessPiece king, bool clearFlag)
         {
             if (movePiece != king)
@@ -143,6 +177,14 @@ namespace ChessGUI.Controllers
             }
         }
 
+        /// <summary>
+        /// Toggles ignore on the ChessPiece for movement testing purposes. If a piece
+        /// we're moving would occupy a square that has an existing piece we would
+        /// capture it, and therefore we should ignore the moves of that piece that
+        /// we captured. (Ignoring is essentially capturing without actually capturing.)
+        /// </summary>
+        /// <param name="pieceToIgnore">ChessPiece to ignore movements from</param>
+        /// <param name="ignoreFlag">Ignore flag value</param>
         private static void SetIgnore(ChessPiece pieceToIgnore, bool ignoreFlag)
         {
             if (pieceToIgnore != null)
@@ -157,9 +199,9 @@ namespace ChessGUI.Controllers
         /// </summary>
         private static void UpdateSquares()
         {
-            _startSquare = Start.DataContext as ChessSquare;
-            _endSquare = End.DataContext as ChessSquare;
-            MovePiece = _startSquare.Piece;
+            StartSquare = Start.DataContext as ChessSquare;
+            EndSquare = End.DataContext as ChessSquare;
+            MovePiece = StartSquare.Piece;
         }
 
         /// <summary>

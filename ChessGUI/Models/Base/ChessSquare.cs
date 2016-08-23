@@ -13,7 +13,7 @@ namespace Chess.Models.Base
     /// This class represents a ChessSquare on a chess board. A ChessSquare has a location
     /// with a [File, Rank] format, a TileColor, and at most one ChessPiece.
     /// </summary>
-    public class ChessSquare : INotifyPropertyChanged
+    public class ChessSquare : INotifyPropertyChanged, IComparable
     {
         // Horizontal row { A - H }
         public char File { get; set; }
@@ -41,8 +41,6 @@ namespace Chess.Models.Base
             }
         }
 
-        //public ChessPiece Piece { get; set; }
-
         /// <summary>
         /// Constructs a new ChessSquare.
         /// </summary>
@@ -68,6 +66,9 @@ namespace Chess.Models.Base
             return Piece != null;
         }
 
+        /// <summary>
+        /// Clears out the piece that this ChessSquare had.
+        /// </summary>
         public void ClearPiece()
         {
             Piece = null;
@@ -75,7 +76,7 @@ namespace Chess.Models.Base
 
         public override string ToString()
         {
-            return Name; /*+ " occupied with: [ " + Piece + " ]"; */
+            return Name;
         }
 
         /// <summary>
@@ -85,6 +86,13 @@ namespace Chess.Models.Base
         public void FieldChanged([CallerMemberName] string field = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(field));
+        }
+
+        public int CompareTo(object obj)
+        {
+            ChessSquare square = obj as ChessSquare;
+            int compareVal = Name.CompareTo(square.Name);
+            return compareVal;
         }
     }
 }

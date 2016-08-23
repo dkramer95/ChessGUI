@@ -14,7 +14,6 @@ namespace ChessGUI.Models.SpecialMoves
     /// </summary>
     public class PawnPromotion : SpecialMove
     {
-
         // Pawn chess piece that we can promote
         public static PawnChessPiece Pawn { get; private set; }
 
@@ -35,6 +34,10 @@ namespace ChessGUI.Models.SpecialMoves
             }
         }
 
+        /// <summary>
+        /// Creates a promoted ChessPiece from the specified symbol representation.
+        /// </summary>
+        /// <param name="symbol">Symbol representation of ChessPiece to create</param>
         public static void SetPromotionFromSymbol(char symbol)
         {
             // Get Chesspiece based off symbol
@@ -45,6 +48,10 @@ namespace ChessGUI.Models.SpecialMoves
             Update(promotionPiece);
         }
 
+        /// <summary>
+        /// Updates the pawn to a PromotedPiece.
+        /// </summary>
+        /// <param name="promotionPiece"></param>
         private static void Update(ChessPiece promotionPiece)
         {
             // Update Player pieces to replace old pawn with promoted pawn

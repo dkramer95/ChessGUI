@@ -18,14 +18,6 @@ namespace Chess.Models.Pieces
             }
         }
 
-        //public override MoveDirection[] MoveDirections
-        //{
-        //    get
-        //    {
-        //        return Moves.DIAGONAL;
-        //    }
-        //}
-
         public override char Symbol
         {
             get

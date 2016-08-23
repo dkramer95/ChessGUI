@@ -42,7 +42,7 @@ namespace Chess.Models.Base
         /// </summary>
         public void Reset()
         {
-            throw new NotImplementedException();
+            Init();
         }
 
         /// <summary>

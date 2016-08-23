@@ -44,12 +44,6 @@ namespace ChessGUI.Controllers
         /// <param name="e"></param>
         private void BoardView_KeyDown(object sender, KeyEventArgs e)
         {
-            // show preview of moves we can make
-            if (e.Key == Key.F5)
-            {
-                ShowMovesPreview();
-            }
-
             if (e.Key == Key.F8)
             {
                 PrintBoardDebug();
@@ -69,22 +63,12 @@ namespace ChessGUI.Controllers
             MessageBox.Show(sb.ToString(), "Board Info");
         }
 
-        [Obsolete]
-        /// <summary>
-        /// Toggles the highlight of each square that the active ChessMovement
-        /// ChessPiece can move to.
-        /// </summary>
-        private void ShowMovesPreview()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Clears out all ChessSquareView previews, if they're currently highlighted.
         /// </summary>
         public void ClearPreviews()
         {
-            BoardView.Squares.FindAll(s => s.IsHighlighted).ForEach(s => s.ToggleHighlight());
+            BoardView.Squares.ForEach(s => s.ResetBackground());
         }
 
         /// <summary>
@@ -106,6 +90,11 @@ namespace ChessGUI.Controllers
             {
                 squareView.PieceView.Clear();
             }
+        }
+
+        public void DisableView()
+        {
+            BoardView.Squares.ForEach(s => s.IsEnabled = false);
         }
 
         /// <summary>
@@ -145,6 +134,22 @@ namespace ChessGUI.Controllers
         }
 
         /// <summary>
+        /// Highlights all squares that the active MovePiece can move to.
+        /// </summary>
+        /// <param name="squareView">Square that we clicked on</param>
+        private void ShowMovesPreview(ChessSquareView squareView)
+        {
+            // We clicked on the piece that we want to move
+            // not the ending location
+            if (squareView == MovementController.Start)
+            {
+                ChessPiece movePiece = MovementController.MovePiece;
+                List<ChessSquare> moves = MovementController.GetCurrentValidMoves();
+                moves.ForEach(s => SquareViewFromSquare(s).TogglePreview());
+            }
+        }
+
+        /// <summary>
         /// Adds click events to the ChessBoard for handling ChessPiece movement.
         /// </summary>
         /// <param name="squareModel">Model for the view</param>
@@ -175,6 +180,7 @@ namespace ChessGUI.Controllers
         {
             ChessSquareView squareView = sender as ChessSquareView;
             MovementController.Move(squareView);
+            ShowMovesPreview(squareView);
         }
     }
 }

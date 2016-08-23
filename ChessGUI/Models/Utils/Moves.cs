@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ChessGUI.Models.Utils
+﻿namespace ChessGUI.Models.Utils
 {
     /// <summary>
     /// Static class containing move information. For each movement, this defines
