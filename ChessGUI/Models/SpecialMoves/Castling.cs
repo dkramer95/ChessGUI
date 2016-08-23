@@ -2,141 +2,215 @@
 using Chess.Models.Pieces;
 using ChessGUI.Models.Utils;
 using System.Collections.Generic;
+using System;
+using ChessGUI.Controllers;
 
 namespace ChessGUI.Models.SpecialMoves
 {
+    /// <summary>
+    /// This class handles Castling for kings.
+    /// </summary>
     public class Castling : SpecialMove
     {
-        private const int KING_CASTLE_MOVE = 2;
+        // Rook movement arrays
+        public static readonly char[] QUEEN_SIDE = { 'A', 'D' };
+        public static readonly char[] KING_SIDE  = { 'H', 'F' };
 
-        public static RookChessPiece KingSideRook { get; private set; }
-        public static RookChessPiece QueenSideRook { get; private set; }
+        public int CastlingRank { get; private set; }
+        public ChessSquare LeftSideCastle { get; private set; }
+        public ChessSquare RightSideCastle { get; private set; }
+        public KingChessPiece King { get; private set; }
 
-        public static ChessSquare KingSideCastle { get; private set; }
-        public static ChessSquare QueenSideCastle { get; private set; }
 
-        public override void Check()
+        public Castling(KingChessPiece king)
         {
+            King = king;
+            Init();
         }
 
-        public static void CheckCastling(KingChessPiece king, ref List<ChessSquare> available)
+        /// <summary>
+        /// Initializes Castling based on our KingChessPiece.
+        /// </summary>
+        private void Init()
         {
-            if (!king.InCheck && (king.MoveCount == 0))
+            CastlingRank = (King.Color == ChessColor.LIGHT) ? ChessBoard.MIN_RANK : ChessBoard.MAX_RANK;
+        }
+
+        /// <summary>
+        /// Checks to see if the new location is equal to that of either the
+        /// LeftSide or RightSide castling movements.
+        /// </summary>
+        /// <param name="newLocation"></param>
+        public void CheckMovement(ChessSquare newLocation)
+        {
+            if ((LeftSideCastle == newLocation))
             {
-                // King moves 2 squares left or right and the rook is moved to
-                // stand on the opposite side of the king.
-                IDictionary<int, List<ChessSquare>> squares = GetCastleSquares(king);
+                CastleMoveRook(QUEEN_SIDE);
+            }
+            else if ((RightSideCastle == newLocation))
+            {
+                CastleMoveRook(KING_SIDE);
+            }
+        }
 
-                foreach (int moveVal in squares.Keys)
+        /// <summary>
+        /// Checks to see if the king can castle.
+        /// </summary>
+        /// <param name="King"></param>
+        /// <param name="available"></param>
+        public void Check(ref List<ChessSquare> available)
+        {
+            if (MovementController.ActivePlayer.Color == King.Color)
+            {
+                // Clear out previous CastlingPositions
+                Clear();
+
+                // King cannot have moved and cannot castle out of check
+                if (!King.InCheck && (King.MoveCount == 0))
                 {
-                    List<ChessSquare> squaresList = squares[moveVal];
+                    // Left side
+                    List<ChessSquare> leftCastleSquares 
+                        = GetCastleSquares(s => (s.Rank != this.King.Location.Rank) || (s.File > this.King.Location.File), false);
 
-                    // movement for the king
-                    if ((squaresList.Count == KING_CASTLE_MOVE))
+                    if (IsCastlingMovementValid(leftCastleSquares))
                     {
-                        // check to make sure that if we move by castling, king would not
-                        // be threatened.
-                        if (IsCastlingMovementSafe(squaresList))
-                        {
-                            // square that king would move to
-                            ChessSquare castleSquare = squaresList[0];
+                        LeftSideCastle = GetCastleMove('A', leftCastleSquares, ref available);
+                    }
 
-                            // get the rooks and add castleSquare to moves if castling is valid, finally!
-                            if ((moveVal > 0))
-                            {
-                                // right
-                                TryAddRook(king, 'H', castleSquare, ref available);
-                            }
-                            else
-                            {
-                                // left
-                                TryAddRook(king, 'A', castleSquare, ref available);
-                            }
-                        }
+                    // Right side
+                    List<ChessSquare> rightCastleSquares
+                        = GetCastleSquares(s => (s.Rank != this.King.Location.Rank) || (s.File < this.King.Location.File), true);
+
+                    if (IsCastlingMovementValid(rightCastleSquares))
+                    {
+                        RightSideCastle = GetCastleMove('H', rightCastleSquares, ref available);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Tries to add a rook if it would be valid.
+        /// Gets the movement location to where this King will move
+        /// if he castles. This checks to make sure that the rook exists
+        /// and hasn't moved, because otherwise the king can't castle.
         /// </summary>
-        /// <param name="king">KingChessPiece</param>
-        /// <param name="file">File location of Rook</param>
-        /// <param name="castleSquare">Castle Square that king would move to</param>
-        /// <param name="available">List of available moves</param>
-        private static void TryAddRook(KingChessPiece king, char file, ChessSquare castleSquare, ref List<ChessSquare> available)
+        /// <param name="rookFile"></param>
+        /// <param name="castlingSquares"></param>
+        /// <param name="available"></param>
+        /// <returns></returns>
+        private ChessSquare GetCastleMove(char rookFile, List<ChessSquare> castlingSquares, ref List<ChessSquare> available)
         {
-            ChessSquare square = Game.Controller.BoardModel.SquareAt(file, king.Location.Rank);
+            // Square that king will castle to
+            ChessSquare castlingSquare = null;
 
-            // check to see if rook exists and hasn't moved to be able to castle
+            // Square that should contain the rook
+            ChessSquare square = Game.Controller.BoardModel.SquareAt(rookFile + "" + CastlingRank);
+
+            // Check to make sure that the square does indeed contain the rook
             if (square.IsOccupied() && square.Piece is RookChessPiece)
             {
-                RookChessPiece rookPiece = square.Piece as RookChessPiece;
-                if ((rookPiece.MoveCount == 0))
+                RookChessPiece rook = square.Piece as RookChessPiece;
+                
+                // rook cannot have moved at all
+                if ((rook.MoveCount == 0))
                 {
-                    available.Add(castleSquare);
-                    UpdateRook(file, rookPiece, castleSquare);
+                    // King must move 2 squares to castle
+                    if ((castlingSquares.Count == 2))
+                    {
+                        // add to the king's available moves for castling.
+                        castlingSquare = castlingSquares[0];
+                        available.Add(castlingSquare);
+                    }
                 }
             }
-        }
-
-        private static void UpdateRook(char file, RookChessPiece rook, ChessSquare square)
-        {
-            if (file == 'H')
-            {
-                KingSideRook = rook;
-                KingSideCastle = square;
-            }
-            else
-            {
-                QueenSideRook = rook;
-                QueenSideCastle = square;
-            }
-        }
-
-        private static IDictionary<int, List<ChessSquare>> GetCastleSquares(KingChessPiece king)
-        {
-            IDictionary<int, List<ChessSquare>> squares = null;
-
-            // left side -> remove squares that aren't to the left
-            List<ChessSquare> leftSquares = BoardScanner.Scan(king, 2);
-            leftSquares.RemoveAll(s => (s.Rank != king.Location.Rank) || (s.File > king.Location.File));
-            leftSquares.Sort();
-
-            // right side -> remove squares that aren't to the right
-            List<ChessSquare> rightSquares = BoardScanner.Scan(king, 2);
-            rightSquares.RemoveAll(s => (s.Rank != king.Location.Rank) || (s.File < king.Location.File));
-            rightSquares.Sort();
-            rightSquares.Reverse();
-
-            // use key as movement direction. Sneaky hack :)
-            squares = new Dictionary<int, List<ChessSquare>>() { { -1, leftSquares }, { 1, rightSquares } };
-
-            return squares;
+            return castlingSquare;
         }
 
         /// <summary>
-        /// Checks to see if movement required for Castling is safe.
+        /// Checks to see if castling movement is valid, such that the distance we move
+        /// is correct and that by moving, the king isn't threatened even just by passing.
         /// </summary>
-        /// <param name="castleSquares">List of squares king would move to castle that
-        /// need to be checked to ensure that an enemy couldn't occupy and threaten
-        /// the king.</param>
-        /// <returns></returns>
-        private static bool IsCastlingMovementSafe(List<ChessSquare> castleSquares)
+        /// <param name="castlingSquares"></param>
+        /// <returns>true if list of castling squares is valid</returns>
+        private bool IsCastlingMovementValid(List<ChessSquare> castlingSquares)
         {
-            List<ChessSquare> enemyMoves = Game.GetPlayerMoves(Game.GetOpponent());
+            bool isValidMovement = true;
+            List<ChessSquare> enemyMoves = MovementController.Game.GetEnemyMoves();
 
-            bool isMovementSafe = true;
-
-            castleSquares.ForEach(s =>
+            if ((castlingSquares.Count < 2))
             {
-                if (enemyMoves.Contains(s))
+                isValidMovement = false;
+            }
+            else
+            {
+                // check to make sure enemy couldn't move to any square 
+                foreach (ChessSquare s in castlingSquares)
                 {
-                    isMovementSafe = false;
+                    // king is not allowed to move if he would be threatened
+                    if (enemyMoves.Contains(s))
+                    {
+                        isValidMovement = false;
+                        break;
+                    }
                 }
-            });
-            return isMovementSafe;
+            }
+            return isValidMovement;
         }
+
+        /// <summary>
+        /// Gets the castling ChessSquares that the king must move over in
+        /// order to castle.
+        /// </summary>
+        /// <param name="filter">Filter used to exclude invalid castle squares</param>
+        /// <param name="reverse">Should the list be reversed. (This is helpful later)</param>
+        /// <returns>List containing squares for castling</returns>
+        private List<ChessSquare> GetCastleSquares(Predicate<ChessSquare> filter, bool reverse)
+        {
+            List<ChessSquare> castleSquares = BoardScanner.Scan(King, 2);
+            castleSquares.RemoveAll(filter);
+            castleSquares.Sort();
+            if (reverse)
+            {
+                castleSquares.Reverse();
+            }
+            return castleSquares;
+        }
+
+        /// <summary>
+        /// Clears out old movement values for the king.
+        /// </summary>
+        private void Clear()
+        {
+            LeftSideCastle = null;
+            RightSideCastle = null;
+        }
+
+        /// <summary>
+        /// Moves the rook to the correct location when the king castles.
+        /// </summary>
+        /// <param name="moveArr">KING_SIDE or QUEEN_SIDE array containing start and end files</param>
+        private void CastleMoveRook(char[] moveArr)
+        {
+            ChessBoard board = Game.Controller.BoardModel;
+            ChessPiece rook  = board.SquareAt(GetSquare(0, moveArr)).Piece;
+            ChessSquare endSquare = board.SquareAt(GetSquare(1, moveArr));
+            MovementController.Move(rook, endSquare);
+        }
+
+        /// <summary>
+        /// Convenience method for getting the correct string from the moveArr
+        /// and specified index.
+        /// </summary>
+        /// <param name="index">Index in moveArr</param>
+        /// <param name="moveArr">MoveArr</param>
+        /// <returns>string contianing file and castling rank</returns>
+        private string GetSquare(int index, char[] moveArr)
+        {
+            string squareStr = moveArr[index] + "" + CastlingRank;
+            return squareStr;
+        }
+
+        // Unused
+        public override void Check() { }
     }
 }

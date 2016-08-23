@@ -55,6 +55,26 @@ namespace ChessGUI.Controllers
         }
 
         /// <summary>
+        /// Handles moving the specified movePiece to the endSquare. This bypasses
+        /// clicking on squares and movement validation. This should really only
+        /// be used for castling and moving a Rook.
+        /// </summary>
+        /// <param name="movePiece">Piece to move (Should be a rook)</param>
+        /// <param name="endSquare">Ending location for piece</param>
+        public static void Move(ChessPiece movePiece, ChessSquare endSquare)
+        {
+            // Start
+            ChessSquareView startSquareView = Game.Controller.SquareViewFromSquare(movePiece.Location);
+            movePiece.MoveTo(endSquare);
+            endSquare.Piece = movePiece;
+            startSquareView.PieceView.Clear();
+
+            // End
+            ChessSquareView endSquareView = Game.Controller.SquareViewFromSquare(endSquare);
+            endSquareView.PieceView.SetImageFromPiece(movePiece);
+        }
+
+        /// <summary>
         /// Clears out the movement and updates the ending location with the proper
         /// ChessPiece image that we just moved.
         /// </summary>
@@ -85,15 +105,6 @@ namespace ChessGUI.Controllers
                 }
             }
             return canMove;
-        }
-
-        private static void CheckCastling(ref List<ChessSquare> validMoves)
-        {
-            if (MovePiece is KingChessPiece)
-            {
-                KingChessPiece king = MovePiece as KingChessPiece;
-                Castling.CheckCastling(king, ref validMoves);
-            }
         }
 
         /// <summary>
@@ -136,12 +147,6 @@ namespace ChessGUI.Controllers
                 s.Piece = original;
             });
             SetClear(movePiece, king, false);
-
-            // check for castling and add moves if king can castle
-            if (MovePiece is KingChessPiece)
-            {
-                CheckCastling(ref validMoves);
-            }
             return validMoves;
         }
 

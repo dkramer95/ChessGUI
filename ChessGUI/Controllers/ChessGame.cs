@@ -208,6 +208,17 @@ namespace ChessGUI.Controllers
             return playerMoves;
         }
 
+        /// <summary>
+        /// Convenience method for getting the moves of the current enemy to the
+        /// active player in the game.
+        /// </summary>
+        /// <returns></returns>
+        public List<ChessSquare> GetEnemyMoves()
+        {
+            List<ChessSquare> enemyMoves = GetPlayerMoves(GetOpponent());
+            return enemyMoves;
+        }
+
         public List<ChessPiece> GetPlayerPieces(ChessPlayer player)
         {
             List<ChessPiece> playerPieces = player.Pieces.FindAll(p => (!p.Ignore && !p.IsCaptured));

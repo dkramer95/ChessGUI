@@ -9,9 +9,10 @@ namespace Chess.Models.Pieces
 {
     public class KingChessPiece : ChessPiece
     {
-        public int CastlingRank { get; private set; }
-
         public bool InCheck { get; set; }
+
+        // Castling Movement
+        public Castling Castling { get; private set; }
 
         public KingChessPiece(ChessSquare location, ChessColor color) : base(location, color)
         {
@@ -20,7 +21,7 @@ namespace Chess.Models.Pieces
 
         private void Init()
         {
-            CastlingRank = (Color == ChessColor.LIGHT) ? ChessBoard.MIN_FILE : ChessBoard.MAX_RANK;
+            Castling = new Castling(this);
         }
 
         public override char Symbol
@@ -56,7 +57,15 @@ namespace Chess.Models.Pieces
         public override List<ChessSquare> GetAvailableMoves()
         {
             List<ChessSquare> available = BoardScanner.Scan(this, 1);
+            Castling.Check(ref available);
             return available;
+        }
+
+        public override bool MoveTo(ChessSquare newLocation)
+        {
+            bool didMove = base.MoveTo(newLocation);
+            Castling.CheckMovement(newLocation);
+            return didMove;
         }
     }
 }
