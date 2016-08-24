@@ -4,7 +4,6 @@ using System.Windows;
 using ChessGUI.Models.SpecialMoves;
 using ChessGUI.Dialogs;
 using Chess.Models.Pieces;
-using System.Windows.Media;
 
 namespace ChessGUI.Controllers
 {
@@ -14,15 +13,15 @@ namespace ChessGUI.Controllers
     public class ChessGame
     {
         public MainWindow App { get; private set; }
-        public ChessBoardController Controller { get; private set; }
 
+        public ChessBoardController Controller { get; private set; }
         public List<SpecialMove> SpecialMoves { get; private set; }
 
-        // The player who is currently playing
         public ChessPlayer ActivePlayer { get; set; }
-
         public ChessPlayer LightPlayer { get; private set; }
         public ChessPlayer DarkPlayer { get; private set; }
+
+        public int TurnCount { get; private set; }
 
         /// <summary>
         /// Constructs a new ChessGame.
@@ -42,6 +41,7 @@ namespace ChessGUI.Controllers
         {
             Debug.SHOW_MESSAGES = true;
             MoveController.Game = this;
+            TurnCount = 0;
 
             InitSpecialMoves();
 
@@ -72,7 +72,7 @@ namespace ChessGUI.Controllers
 
             if (king.InCheck)
             {
-                // Next turn to preview if king is in checkmate
+                // NextTurn used to preview if king is in checkmate
                 NextTurn();
                 if (!IsCheckMate())
                 {
@@ -81,30 +81,9 @@ namespace ChessGUI.Controllers
                     NextTurn();
                 } else
                 {
-                    // Game over
-                    MessageBox.Show("CheckMate!");
-                    RenderCheckMate();
-                    PromptPlayAgain();
+                    GameOver();
                 }
             }
-        }
-
-        /// <summary>
-        /// Prompts user to play another game of chess or to exit
-        /// the application.
-        /// </summary>
-        private void PromptPlayAgain()
-        {
-            PlayAgainDialog dlg = new PlayAgainDialog(this);
-            dlg.Show();
-        }
-
-        /// <summary>
-        /// Renders the view for CheckMate.
-        /// </summary>
-        private void RenderCheckMate()
-        {
-            Controller.SetViewEnabled(false);
         }
 
         /// <summary>
@@ -126,8 +105,7 @@ namespace ChessGUI.Controllers
         /// </summary>
         private void BeginGame()
         {
-            // fake out first time (really is light player who goes first)
-            ActivePlayer = DarkPlayer;
+            ActivePlayer = LightPlayer;
             NextTurn();
         }
 
@@ -172,12 +150,25 @@ namespace ChessGUI.Controllers
         }
 
         /// <summary>
+        /// Advances GamePlay after a Player has made their move.
+        /// </summary>
+        public void Advance()
+        {
+            if (ActivePlayer.DidMove)
+            {
+                ++TurnCount;
+                CheckSpecialMoves();
+                NextTurn();
+            }
+        }
+
+        /// <summary>
         /// Advances to the next Player so that they can take their turn.
         /// </summary>
-        public void NextTurn()
+        private void NextTurn()
         {
             ClearActivePlayer();
-            AdvanceActivePlayer();
+            NextPlayer();
         }
 
         /// <summary>
@@ -191,16 +182,53 @@ namespace ChessGUI.Controllers
         /// <summary>
         /// Advances to the next player based on who the previous active player was.
         /// </summary>
-        private void AdvanceActivePlayer()
+        private void NextPlayer()
         {
-            // Alternate between Light and Dark
-            ActivePlayer = (ActivePlayer == LightPlayer) ? DarkPlayer : LightPlayer;
+            if (TurnCount > 0)
+            {
+                // Alternate between Light and Dark
+                ActivePlayer = (ActivePlayer == LightPlayer) ? DarkPlayer : LightPlayer;
+            } else
+            {
+                ActivePlayer = LightPlayer;
+            }
 
             // Updates ChessMovement to only allow movement from pieces belonging
             // to the ActivePlayer
             MoveController.ActivePlayer = ActivePlayer;
         }
 
+        /// <summary>
+        /// Handles GameOver (CheckMate).
+        /// </summary>
+        private void GameOver()
+        {
+            // Display stats box
+            MessageBox.Show(string.Format("CHECKMATE! {0} WINS!\n\nTotal Moves: {1}",
+                GetOpponent(), TurnCount), "Game Over");
+
+            RenderCheckMate();
+            PromptPlayAgain();
+        }
+
+        /// <summary>
+        /// Renders the view for CheckMate.
+        /// </summary>
+        private void RenderCheckMate()
+        {
+            Controller.SetViewEnabled(false);
+        }
+
+        /// <summary>
+        /// Prompts user to play another game of chess or to exit
+        /// the application.
+        /// </summary>
+        private void PromptPlayAgain()
+        {
+            PlayAgainDialog dlg = new PlayAgainDialog(this);
+            dlg.Show();
+        }
+        
         /// <summary>
         /// Shows the pawn promotion dialog to allow player to select which piece
         /// they wish to promote their pawn to.
@@ -225,17 +253,6 @@ namespace ChessGUI.Controllers
         }
 
         /// <summary>
-        /// Convenience method for getting the moves of the current enemy to the
-        /// active player in the game.
-        /// </summary>
-        /// <returns></returns>
-        public List<ChessSquare> GetEnemyMoves()
-        {
-            List<ChessSquare> enemyMoves = GetPlayerMoves(GetOpponent());
-            return enemyMoves;
-        }
-
-        /// <summary>
         /// Gets all pieces for the specified ChessPlayer.
         /// </summary>
         /// <param name="player">Player that we want pieces from</param>
@@ -244,6 +261,17 @@ namespace ChessGUI.Controllers
         {
             List<ChessPiece> playerPieces = player.Pieces.FindAll(p => (!p.Ignore && !p.IsCaptured));
             return playerPieces;
+        }
+
+        /// <summary>
+        /// Convenience method for getting the moves of the current enemy to the
+        /// active player in the game.
+        /// </summary>
+        /// <returns></returns>
+        public List<ChessSquare> GetEnemyMoves()
+        {
+            List<ChessSquare> enemyMoves = GetPlayerMoves(GetOpponent());
+            return enemyMoves;
         }
 
         /// <summary>

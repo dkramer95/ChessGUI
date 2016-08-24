@@ -201,18 +201,8 @@ namespace ChessGUI.Controllers
             ChessSquareView squareView = sender as ChessSquareView;
             MoveController.Move(squareView);
             ShowMovesPreview(squareView);
-            CheckDidMove();
-        }
 
-        private void CheckDidMove()
-        {
-            ChessGame game = MoveController.Game;
-
-            if (game.ActivePlayer.DidMove)
-            {
-                game.CheckSpecialMoves();
-                game.NextTurn();
-            }
+            MoveController.Game.Advance();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace ChessGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ChessGame Game { get; private set; }
+        public ChessGame Game { get; set; }
 
 
         public MainWindow()
