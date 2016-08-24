@@ -1,12 +1,9 @@
 ﻿using Chess.Models.Base;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows;
-using ChessGUI.Models.AI;
 using ChessGUI.Models.SpecialMoves;
 using ChessGUI.Dialogs;
 using Chess.Models.Pieces;
-using System;
 
 namespace ChessGUI.Controllers
 {

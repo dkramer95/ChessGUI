@@ -5,6 +5,11 @@ using System.Linq;
 
 namespace ChessGUI.Models.SpecialMoves
 {
+    /// <summary>
+    /// This class handles the movement of PawnChessPieces where there
+    /// initial move is 2 ranks. By moving 2 ranks, an enemy Pawn is
+    /// allowed to capture the moved Pawn EnPassant.
+    /// </summary>
     public class EnPassant : SpecialMove
     {
         private static readonly int[] ValidRanks = { 4, 5 };
@@ -16,6 +21,7 @@ namespace ChessGUI.Models.SpecialMoves
         public static PawnChessPiece MovedPawn { get; private set; }
 
         public static bool DidCapture { get; private set; }
+
 
         public override void Check()
         {

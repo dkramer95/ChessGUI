@@ -4,7 +4,9 @@ using System;
 namespace ChessGUI.Models.SpecialMoves
 {
     /// <summary>
-    /// Base class for handling special moves.
+    /// Base class for handling special moves. Classes that inherit this
+    /// class will be able to communicate with the Game for updating
+    /// when special moves have occurred.
     /// </summary>
     public abstract class SpecialMove
     {

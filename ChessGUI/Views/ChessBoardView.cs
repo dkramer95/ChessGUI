@@ -32,6 +32,10 @@ namespace ChessGUI.Views
             return brush;
         }
 
+        /// <summary>
+        /// Adds a SquareView to our list of Squares.
+        /// </summary>
+        /// <param name="squareView">ChessSquareView to add</param>
         public void AddSquare(ChessSquareView squareView)
         {
             Squares.Add(squareView);

@@ -16,6 +16,11 @@ namespace Chess.Models.Pieces
         {
         }
 
+        /// <summary>
+        /// Gets list of available moves for this KnightChessPiece where the available
+        /// pieces are those that are the result of moving in a right angle 'L' shape.
+        /// </summary>
+        /// <returns>List of available moves for this KnightChessPiece</returns>
         public override List<ChessSquare> GetAvailableMoves()
         {
             List<ChessSquare> available = BoardScanner.ScanBranched(this, 1);

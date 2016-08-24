@@ -73,12 +73,9 @@
     <Compile Include="Controllers\ChessBoardController.cs" />
     <Compile Include="Controllers\MoveController.cs" />
     <Compile Include="Controllers\ChessGame.cs" />
-    <Compile Include="Converters\ChessImageConverter.cs" />
     <Compile Include="Dialogs\PromotionDialog.xaml.cs">
       <DependentUpon>PromotionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\AI\AdvancedAI.cs" />
-    <Compile Include="Models\AI\BasicAI.cs" />
     <Compile Include="Models\SpecialMoves\Castling.cs" />
     <Compile Include="Models\SpecialMoves\EnPassant.cs" />
     <Compile Include="Models\SpecialMoves\KingInCheck.cs" />
@@ -196,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\" />
+    <Folder Include="Models\AI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

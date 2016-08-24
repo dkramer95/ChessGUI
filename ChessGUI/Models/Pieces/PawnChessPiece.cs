@@ -22,6 +22,9 @@ namespace Chess.Models.Pieces
             Init();
         }
 
+        /// <summary>
+        /// Initializes this pawn with the proper MovementDirection based on its Color.
+        /// </summary>
         protected void Init()
         {
             MoveDirections = (Color == ChessColor.LIGHT) ? Moves.NORTH : Moves.SOUTH;
@@ -39,12 +42,13 @@ namespace Chess.Models.Pieces
             return canPromote;
         }
 
-        public override bool MoveTo(ChessSquare newLocation)
-        {
-            bool result = base.MoveTo(newLocation);
-            return result;
-        }
-
+        /// <summary>
+        /// Gets all the available moves for this PawnChessPiece. Using the super
+        /// class method, this checks for diagonal captures and also removes any
+        /// ChessSquares that block the Pawn vertically, since Pawns can only
+        /// capture diagonally.
+        /// </summary>
+        /// <returns>List of available moves for this PawnChessPiece</returns>
         public override List<ChessSquare> GetAvailableMoves()
         {
             int limit = GetMoveLimit();
@@ -69,7 +73,7 @@ namespace Chess.Models.Pieces
         /// <returns>rank movement int value</returns>
         private int GetMoveLimit()
         {
-            int limit = (!HasMoved()) ? 2 : 1;
+            int limit = !HasMoved() ? 2 : 1;
             return limit;
         }
     }

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace ChessGUI.Views
 {
+    /// <summary>
+    /// This class contains a list of ChessSquare styles that are used for
+    /// representing different states of a ChessSquare.
+    /// </summary>
     public static class SquareStyles
     {
         // Color to help indicate this ChessSquareView is selected.
@@ -15,6 +14,7 @@ namespace ChessGUI.Views
         // Color to help indicate that this ChessSquareView is available to move to
         public static Brush PREVIEW_COLOR = Brushes.MediumAquamarine;
 
+        // Color to help indicate that the King is in check.
         public static Brush CHECK_COLOR = Brushes.Red;
 
         // Background ChessSquare styles

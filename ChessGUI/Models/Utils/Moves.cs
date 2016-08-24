@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Static class containing move information. For each movement, this defines
-    /// the advancement for File and/or rank. ChessPieces use the movement arrays
+    /// the advancement for File and/or Rank. ChessPieces use the movement arrays
     /// to define all supported moves.
     /// </summary>
     public static class Moves

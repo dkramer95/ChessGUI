@@ -1,18 +1,17 @@
-﻿using Chess.Models.Base;
-using ChessGUI.Controllers;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace ChessGUI.Views
 {
     /// <summary>
-    /// This class represents a single individual graphical view of a ChessSquare.
+    /// This class represents a single individual graphical view of a ChessSquare,
+    /// which also contains a ChessPieceView for displaying a ChessPiece to the screen.
     /// </summary>
     public class ChessSquareView : Button
     {
         // Preserve original color, for cases of highlighting
-        private Brush _bgColor;
+        public Brush BGColor { get; private set; }
 
         public bool IsHighlighted { get; private set; }
 
@@ -31,24 +30,11 @@ namespace ChessGUI.Views
         }
 
         /// <summary>
-        /// Constructs a new ChessSquareView with a specified PieceView
-        /// imagePath to render a ChessPiece onto this ChessSquareView.
-        /// </summary>
-        /// <param name="color">Background color to assign</param>
-        /// <param name="imgPath">image path for ChessPieceView</param>
-        //public ChessSquareView(Brush color, string imgPath)
-        //{
-        //    Background = color;
-        //    PieceView = new ChessPieceView(imgPath);
-        //    Init();
-        //}
-
-        /// <summary>
         /// Initializes this ChessSquareView with proper coloring and margins.
         /// </summary>
         private void Init()
         {
-            _bgColor = Background;
+            BGColor = Background;
             BorderBrush = Brushes.Black;
             Margin = new Thickness(-1);
             Content = PieceView;
@@ -60,7 +46,7 @@ namespace ChessGUI.Views
         public void ToggleHighlight()
         {
             IsHighlighted = (IsHighlighted) ? false : true;
-            Background = (IsHighlighted) ? SquareStyles.HIGHLIGHT_COLOR : _bgColor;
+            Background = (IsHighlighted) ? SquareStyles.HIGHLIGHT_COLOR : BGColor;
         }
 
         /// <summary>
@@ -68,10 +54,14 @@ namespace ChessGUI.Views
         /// </summary>
         public void TogglePreview()
         {
-            Background = (Background == SquareStyles.PREVIEW_COLOR) ? _bgColor : SquareStyles.PREVIEW_COLOR;
+            Background = (Background == SquareStyles.PREVIEW_COLOR) ? BGColor : SquareStyles.PREVIEW_COLOR;
         }
 
-        public void ToggleCheck()
+        /// <summary>
+        /// Sets the background of this ChessSquareView to the Color representing
+        /// a King InCheck.
+        /// </summary>
+        public void SetCheck()
         {
             Background = SquareStyles.CHECK_COLOR;
         }
@@ -81,7 +71,7 @@ namespace ChessGUI.Views
         /// </summary>
         public void ResetBackground()
         {
-            Background = _bgColor;
+            Background = BGColor;
         }
     }
 }

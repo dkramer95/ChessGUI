@@ -6,7 +6,9 @@ using Chess.Models.Base;
 namespace ChessGUI.Models.SpecialMoves
 {
     /// <summary>
-    /// This class handles checking for PawnPromotion.
+    /// This class handles checking for PawnPromotion. Pawns can be promoted as
+    /// soon as they reach the end rank of their enemy, and can be promoted to
+    /// any piece except for a King or another Pawn.
     /// </summary>
     public class PawnPromotion : SpecialMove
     {

@@ -8,7 +8,8 @@ using ChessGUI.Controllers;
 namespace ChessGUI.Models.SpecialMoves
 {
     /// <summary>
-    /// This class handles Castling for kings.
+    /// This class handles Castling movement for a KingChessPiece. When a king castles,
+    /// a RookChessPiece is also moved. This class handles movement for the Rook as well.
     /// </summary>
     public class Castling : SpecialMove
     {

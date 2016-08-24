@@ -17,12 +17,10 @@ namespace ChessGUI.Views
         // Path to ChessPiece resource image 
         public string ImagePath { get; private set; }
 
-        public ChessPieceView(string path)
-        {
-            Init();
-            SetImagePath(path);
-        }
 
+        /// <summary>
+        /// Constructs a new ChessPieceView without a ChessPiece image.
+        /// </summary>
         public ChessPieceView()
         {
             Init();
@@ -50,6 +48,10 @@ namespace ChessGUI.Views
             return path;
         }
 
+        /// <summary>
+        /// Sets the image based on the ChessPiece.
+        /// </summary>
+        /// <param name="piece">ChessPiece we want an image representation of</param>
         public void SetImageFromPiece(ChessPiece piece)
         {
             SetImagePath(GetChessPieceImage(piece));
@@ -67,7 +69,7 @@ namespace ChessGUI.Views
         }
 
         /// <summary>
-        /// Clears out the image and replaces it with a transparent background.
+        /// Clears out the image and replaces it with a transparent background. (No piece)
         /// </summary>
         public void Clear()
         {

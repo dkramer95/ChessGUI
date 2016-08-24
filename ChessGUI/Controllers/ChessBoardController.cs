@@ -42,7 +42,7 @@ namespace ChessGUI.Controllers
             ChessSquareView kingSquareView = SquareViewFromSquare(king.Location);
             if (king.InCheck)
             {
-                kingSquareView.ToggleCheck();
+                kingSquareView.SetCheck();
             } else
             {
                 kingSquareView.ResetBackground();

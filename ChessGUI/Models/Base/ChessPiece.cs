@@ -66,8 +66,8 @@ namespace Chess.Models.Base
                     Capture(newLocation.Piece);
                 }
                 UpdateLocation(newLocation);
-                didMove = true;
                 ++MoveCount;
+                didMove = true;
             }
             return didMove;
         }
