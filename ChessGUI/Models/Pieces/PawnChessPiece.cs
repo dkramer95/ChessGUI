@@ -13,35 +13,11 @@ namespace Chess.Models.Pieces
 
         // End rank of this Pawn for Promotion
         public int EndRank { get; private set; }
+        public override char Symbol { get { return 'P'; } }
+        public override Move[] MoveDirections { get { return _moveDirection; } }
+        public override int Value { get { return 1; } }
+        public override string ToString() { return Color + "_Pawn"; }
 
-        public override char Symbol
-        {
-            get
-            {
-                return 'P';
-            }
-        }
-
-        public override Move[] MoveDirections
-        {
-            get
-            {
-                return _moveDirection;
-            }
-        }
-
-        public override int Value
-        {
-            get
-            {
-                return 1;
-            }
-        }
-
-        public override string ToString()
-        {
-            return Color + "_Pawn";
-        }
 
         public PawnChessPiece(ChessSquare location, ChessColor color) : base(location, color)
         {
@@ -73,7 +49,7 @@ namespace Chess.Models.Pieces
 
         public override List<ChessSquare> GetAvailableMoves()
         {
-            int limit = (MoveCount == 0) ? 2 : 1;
+            int limit = (!HasMoved()) ? 2 : 1;
 
             // Scan vertically and remove any squares where we are blocked
             List<ChessSquare> available = BoardScanner.Scan(this, limit);

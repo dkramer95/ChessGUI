@@ -69,13 +69,8 @@ namespace ChessGUI.Models.Utils
                     nextSquare = NextSquare();
 
                     // Add if opponent, then break, otherwise just break
-                    if (nextSquare.IsOccupied())
+                    if (CheckPieceHit(nextSquare, ref available))
                     {
-                        if (Piece.IsOpponent(nextSquare.Piece))
-                        {
-                            available.Add(nextSquare);
-                            Piece.AvailableCaptures.Add(nextSquare.Piece);
-                        }
                         break;
                     }
                     available.Add(nextSquare);
@@ -83,6 +78,30 @@ namespace ChessGUI.Models.Utils
                 ResetStart();
             }
             return available;
+        }
+
+        /// <summary>
+        /// Helper method for Scan. Checks to see if the square contains an opponent.
+        /// If it does it adds it to the list of available squares. Otherwise, we ran
+        /// into a piece of the same color.
+        /// </summary>
+        /// <param name="square">ChessSquare to check for opponent</param>
+        /// <param name="available">List of ChessSquares</param>
+        /// <returns>true if ChessSquare contains another piece</returns>
+        private static bool CheckPieceHit(ChessSquare square, ref List<ChessSquare> available)
+        {
+            bool didHitPiece = false;
+
+            if (square.IsOccupied())
+            {
+                if (Piece.IsOpponent(square.Piece))
+                {
+                    available.Add(square);
+                    Piece.AvailableCaptures.Add(square.Piece);
+                }
+                didHitPiece = true;
+            }
+            return didHitPiece;
         }
 
         /// <summary>
@@ -110,13 +129,26 @@ namespace ChessGUI.Models.Utils
                     nextSquare = NextSquare();
                 }
                 // Get diagonals from the square we just moved to
-                if (nextSquare != null)
-                {
-                    available.AddRange(GetDiagonals(nextSquare, d).Where(s => s != null && Piece.CanOccupy(s)));
-                }
+                AddDiagonals(nextSquare, d, ref available);
                 ResetStart();
             }
             return available;
+        }
+
+        /// <summary>
+        /// Adds diagonals from the square we just moved to, and from
+        /// the specified direction.
+        /// </summary>
+        /// <param name="square">ChessSquare start</param>
+        /// <param name="direction">Direction to get diagonals from</param>
+        /// <param name="available">List to append diagonals too</param>
+        private static void AddDiagonals(ChessSquare square, Move direction, ref List<ChessSquare> available)
+        {
+            if (square != null)
+            {
+                available.AddRange(GetDiagonals(square, direction)
+                    .Where(s => s != null && Piece.CanOccupy(s)));
+            }
         }
 
         /// <summary>
@@ -133,11 +165,11 @@ namespace ChessGUI.Models.Utils
             foreach(Move m in moves)
             {
                 ChessSquare diagonal = Board.SquareAt((char)(square.File + m.FileMoveValue), square.Rank + m.RankMoveValue);
+
                 if (diagonal != null)
                 {
                     diagonals.Add(diagonal);
 
-                    // TODO maybe move this elsewhere
                     if (diagonal.IsOccupied())
                     {
                         Piece.AvailableCaptures.Add(diagonal.Piece);

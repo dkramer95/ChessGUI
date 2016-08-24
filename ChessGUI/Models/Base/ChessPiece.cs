@@ -141,6 +141,16 @@ namespace Chess.Models.Base
         }
 
         /// <summary>
+        /// Checks to see if this ChessPiece has moved at all yet.
+        /// </summary>
+        /// <returns>true if this ChessPiece has moved at least once</returns>
+        public bool HasMoved()
+        {
+            bool hasMoved = (MoveCount > 0);
+            return hasMoved;
+        }
+
+        /// <summary>
         /// Verifies that the new ChessSquare location is valid for this ChessPiece to
         /// move to, such that it is contained in the AvailableMoves and if it is 
         /// occupied, it is by an opponent that we can capture.
