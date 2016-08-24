@@ -12,12 +12,36 @@ namespace ChessGUI.Dialogs
     /// </summary>
     public partial class PromotionDialog : UserControl
     {
+        public Window Window { get; private set; }
         public ChessGame Game { get; private set; }
+
 
         public PromotionDialog(ChessGame game)
         {
             InitializeComponent();
             Game = game;
+        }
+
+        /// <summary>
+        /// Shows this dialog to the screen.
+        /// </summary>
+        public void Show()
+        {
+            Window = new Window();
+            Window.Width = 300;
+            Window.Height = 350;
+            Window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            Window.Content = this;
+            Window.ShowDialog();
+        }
+
+        /// <summary>
+        /// Dismisses this Promotion Dialog.
+        /// </summary>
+        private void DismissDialog()
+        {
+            Window w = (Window)Parent;
+            w.Close();
         }
 
         /// <summary>
@@ -35,15 +59,6 @@ namespace ChessGUI.Dialogs
 
             PawnPromotion.SetPromotionFromSymbol(symbol);
             DismissDialog();
-        }
-
-        /// <summary>
-        /// Dismisses this Promotion Dialog.
-        /// </summary>
-        private void DismissDialog()
-        {
-            Window w = (Window)Parent;
-            w.Close();
         }
     }
 }

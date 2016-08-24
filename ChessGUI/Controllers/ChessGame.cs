@@ -4,6 +4,7 @@ using System.Windows;
 using ChessGUI.Models.SpecialMoves;
 using ChessGUI.Dialogs;
 using Chess.Models.Pieces;
+using System.Windows.Media;
 
 namespace ChessGUI.Controllers
 {
@@ -12,9 +13,10 @@ namespace ChessGUI.Controllers
     /// </summary>
     public class ChessGame
     {
-        public List<SpecialMove> SpecialMoves { get; private set; }
-
+        public MainWindow App { get; private set; }
         public ChessBoardController Controller { get; private set; }
+
+        public List<SpecialMove> SpecialMoves { get; private set; }
 
         // The player who is currently playing
         public ChessPlayer ActivePlayer { get; set; }
@@ -22,8 +24,13 @@ namespace ChessGUI.Controllers
         public ChessPlayer LightPlayer { get; private set; }
         public ChessPlayer DarkPlayer { get; private set; }
 
-        public ChessGame()
+        /// <summary>
+        /// Constructs a new ChessGame.
+        /// </summary>
+        /// <param name="app">MainWindow application instance</param>
+        public ChessGame(MainWindow app)
         {
+            App = app;
             Init();
             BeginGame();
         }
@@ -41,6 +48,17 @@ namespace ChessGUI.Controllers
             Controller  = new ChessBoardController();
             LightPlayer = new ChessPlayer(ChessColor.LIGHT, Controller.BoardModel.LightPieces);
             DarkPlayer  = new ChessPlayer(ChessColor.DARK, Controller.BoardModel.DarkPieces);
+
+            InitGameView();
+        }
+
+        /// <summary>
+        /// Initializes the GameView so that everything can be seen on screen.
+        /// </summary>
+        private void InitGameView()
+        {
+            App.boardPanel.Children.Clear();
+            App.boardPanel.Children.Add(Controller.BoardView);
         }
 
         /// <summary>
@@ -54,7 +72,7 @@ namespace ChessGUI.Controllers
 
             if (king.InCheck)
             {
-                // Advance next turn to preview if king is in checkmate
+                // Next turn to preview if king is in checkmate
                 NextTurn();
                 if (!IsCheckMate())
                 {
@@ -65,9 +83,28 @@ namespace ChessGUI.Controllers
                 {
                     // Game over
                     MessageBox.Show("CheckMate!");
-                    Controller.SetViewEnabled(false);
+                    RenderCheckMate();
+                    PromptPlayAgain();
                 }
             }
+        }
+
+        /// <summary>
+        /// Prompts user to play another game of chess or to exit
+        /// the application.
+        /// </summary>
+        private void PromptPlayAgain()
+        {
+            PlayAgainDialog dlg = new PlayAgainDialog(this);
+            dlg.Show();
+        }
+
+        /// <summary>
+        /// Renders the view for CheckMate.
+        /// </summary>
+        private void RenderCheckMate()
+        {
+            Controller.SetViewEnabled(false);
         }
 
         /// <summary>
@@ -105,7 +142,7 @@ namespace ChessGUI.Controllers
         /// <summary>
         /// Resets this ChessGame back to its initial starting context.
         /// </summary>
-        private void Reset()
+        public void Reset()
         {
             Init();
             BeginGame();
@@ -168,14 +205,10 @@ namespace ChessGUI.Controllers
         /// Shows the pawn promotion dialog to allow player to select which piece
         /// they wish to promote their pawn to.
         /// </summary>
-        public void ShowPromotionDialog()
+        public void PromptPromotion()
         {
-            Window w = new Window();
-            w.Width = 300;
-            w.Height = 350;
-            w.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            w.Content = new PromotionDialog(this);
-            w.ShowDialog();
+            PromotionDialog dlg = new PromotionDialog(this);
+            dlg.Show();
         }
 
         /// <summary>

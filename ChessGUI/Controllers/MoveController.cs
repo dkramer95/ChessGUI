@@ -36,31 +36,22 @@ namespace ChessGUI.Controllers
         /// <param name="squareView">ChessSquareView we clicked on</param>
         public static void Move(ChessSquareView squareView)
         {
-            if (Start == null)
+            if (Start == null || CheckStartChanged(squareView))
             {
+                Clear();
                 SetStart(squareView);
             } else
             {
-                if (!CheckStartChanged(squareView))
+                SetEnd(squareView);
+                if (CheckMove())
                 {
-                    SetEnd(squareView);
-                    if (CheckMove())
-                    {
-                        MovePiece.MoveTo(EndSquare);
-                        ActivePlayer.DidMove = true;
-                        ClearMovement();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid " + MovePiece + " move!");
-                    }
+                    MovePiece.MoveTo(EndSquare);
+                    ActivePlayer.DidMove = true;
+                    ClearMovement();
                 }
-                // User clicked on a different piece of their own and it
-                // becomes the piece we're moving
                 else
                 {
-                    Clear();
-                    SetStart(squareView);
+                    MessageBox.Show("Invalid " + MovePiece + " move!");
                 }
             }
         }

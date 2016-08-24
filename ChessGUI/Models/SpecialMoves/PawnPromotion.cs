@@ -27,7 +27,7 @@ namespace ChessGUI.Models.SpecialMoves
                 if (pawn.CanPromote())
                 {
                     Pawn = pawn;
-                    Game.ShowPromotionDialog();
+                    Game.PromptPromotion();
                 }
             }
         }

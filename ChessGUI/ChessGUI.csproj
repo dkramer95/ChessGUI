@@ -73,6 +73,9 @@
     <Compile Include="Controllers\ChessBoardController.cs" />
     <Compile Include="Controllers\MoveController.cs" />
     <Compile Include="Controllers\ChessGame.cs" />
+    <Compile Include="Dialogs\PlayAgainDialog.xaml.cs">
+      <DependentUpon>PlayAgainDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\PromotionDialog.xaml.cs">
       <DependentUpon>PromotionDialog.xaml</DependentUpon>
     </Compile>
@@ -93,6 +96,10 @@
     <Compile Include="Views\ChessPieceView.cs" />
     <Compile Include="Views\ChessSquareView.cs" />
     <Compile Include="Views\SquareStyles.cs" />
+    <Page Include="Dialogs\PlayAgainDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\PromotionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

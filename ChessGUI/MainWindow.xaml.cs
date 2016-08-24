@@ -4,11 +4,13 @@ using System.Windows;
 namespace ChessGUI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Main starting point of the application that creates
+    /// the ChessGame and viewable Window.
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ChessGame _game;
+        public ChessGame Game { get; private set; }
+
 
         public MainWindow()
         {
@@ -16,10 +18,20 @@ namespace ChessGUI
             Init();
         }
 
+        /// <summary>
+        /// Initializes the ChessGame.
+        /// </summary>
         private void Init()
         {
-            _game = new ChessGame();
-            boardPanel.Children.Add(_game.Controller.BoardView);
+            Game = new ChessGame(this);
+        }
+
+        /// <summary>
+        /// Exits the ChessGame application.
+        /// </summary>
+        public void Quit()
+        {
+            Application.Current.Shutdown();
         }
     }
 }
