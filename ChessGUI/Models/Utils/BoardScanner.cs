@@ -122,13 +122,16 @@ namespace ChessGUI.Models.Utils
                 int j = 0;
 
                 // scan in current direction until we reach limit
-                while (HasNext() && j < Limit)
+                while (HasNext() && j < limit)
                 {
                     j++;
                     nextSquare = NextSquare();
                 }
-                // Get diagonals from the square we just moved to
-                AddDiagonals(nextSquare, d, ref available);
+                if (NextSquare() != null)
+                {
+                    // Get diagonals from the square we just moved to
+                    AddDiagonals(nextSquare, d, ref available);
+                }
                 ResetStart();
             }
             return available;

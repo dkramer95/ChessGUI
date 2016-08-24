@@ -23,7 +23,7 @@ namespace Chess.Models.Pieces
         /// <returns>List of available moves for this KnightChessPiece</returns>
         public override List<ChessSquare> GetAvailableMoves()
         {
-            List<ChessSquare> available = BoardScanner.ScanBranched(this, 1);
+            List<ChessSquare> available = BoardScanner.ScanBranched(this);
             return available;
         }
     }

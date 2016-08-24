@@ -2,7 +2,6 @@
 using System.Windows.Controls.Primitives;
 using Chess.Models.Base;
 using System.Windows.Media;
-using System.Windows.Input;
 
 namespace ChessGUI.Views
 {

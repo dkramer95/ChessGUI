@@ -139,7 +139,7 @@ namespace ChessGUI.Controllers
             // attempt to get all valid moves for each of the player pieces
             playerPieces.ForEach(p =>
             {
-                List<ChessSquare> movesForPiece = 
+                List<ChessSquare> movesForPiece =
                     MoveController.GetValidMoves(p, ActivePlayer.KingPiece, GetOpponent());
                 validMoves.AddRange(movesForPiece);
             });
