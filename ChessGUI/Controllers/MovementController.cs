@@ -26,6 +26,7 @@ namespace ChessGUI.Controllers
         // Player whose turn it is.
         public static ChessPlayer ActivePlayer { get; set; }
 
+        // Reference to the ChessGame instance
         public static ChessGame Game { get; set; }
 
 
