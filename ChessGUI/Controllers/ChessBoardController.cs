@@ -37,10 +37,10 @@ namespace ChessGUI.Controllers
             BoardView.Focus();
         }
 
-        public void ToggleCheck(KingChessPiece king, bool toggleVal)
+        public void ToggleCheck(KingChessPiece king)
         {
             ChessSquareView kingSquareView = SquareViewFromSquare(king.Location);
-            if (toggleVal)
+            if (king.InCheck)
             {
                 kingSquareView.ToggleCheck();
             } else
@@ -148,10 +148,10 @@ namespace ChessGUI.Controllers
         {
             // We clicked on the piece that we want to move
             // not the ending location
-            if (squareView == MovementController.Start)
+            if (squareView == MoveController.Start)
             {
-                ChessPiece movePiece = MovementController.MovePiece;
-                List<ChessSquare> moves = MovementController.GetCurrentValidMoves();
+                ChessPiece movePiece = MoveController.MovePiece;
+                List<ChessSquare> moves = MoveController.GetCurrentValidMoves();
                 moves.ForEach(s => SquareViewFromSquare(s).TogglePreview());
             }
         }
@@ -188,7 +188,7 @@ namespace ChessGUI.Controllers
         /// <param name="e"></param>
         private void Square_RightClick(object sender, MouseButtonEventArgs e)
         {
-            MovementController.Clear();
+            MoveController.Clear();
         }
 
         /// <summary>
@@ -199,27 +199,20 @@ namespace ChessGUI.Controllers
         private void Square_Click(object sender, RoutedEventArgs e)
         {
             ChessSquareView squareView = sender as ChessSquareView;
-            MovementController.Move(squareView);
+            MoveController.Move(squareView);
             ShowMovesPreview(squareView);
             CheckDidMove();
         }
 
         private void CheckDidMove()
         {
-            ChessGame game = MovementController.Game;
+            ChessGame game = MoveController.Game;
 
             if (game.ActivePlayer.DidMove)
             {
                 game.CheckSpecialMoves();
                 game.NextTurn();
             }
-
-            if (game.IsCheckMate())
-            {
-                MessageBox.Show("Checkmate!", "Game Over");
-                game.Controller.SetViewEnabled(false);
-            }
-
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Chess.Models.Pieces
 {
     public class BishopChessPiece : ChessPiece
     {
-        public override Move[] MoveDirections { get { return Moves.DIAGONAL; } }
+        public override Move[] MoveDirections { get { return Moves.DIAGONAL; } protected set { } }
         public override char Symbol { get { return 'B'; } }
         public override int Value { get { return 350; } }
         public override string ToString() { return Color + "_Bishop"; }

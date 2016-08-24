@@ -27,10 +27,10 @@ namespace ChessGUI.Models.SpecialMoves
         /// </summary>
         private static void CheckCapture()
         {
-            if (MovementController.MovePiece is PawnChessPiece)
-            {
-                PawnChessPiece pawn = MovementController.MovePiece as PawnChessPiece;
+            PawnChessPiece pawn = null;
 
+            if (TryGetPawn(MoveController.MovePiece, out pawn))
+            {
                 if (DidMoveTwoRanks(pawn))
                 {
                     Update(pawn);
@@ -45,6 +45,19 @@ namespace ChessGUI.Models.SpecialMoves
             {
                 Clear();
             }
+        }
+
+        /// <summary>
+        /// Checks to see if the specified ChessPiece is a Pawn.
+        /// </summary>
+        /// <param name="piece">Piece to check to see if it is a Pawn</param>
+        /// <param name="pawn">PawnChessPiece to update with Piece</param>
+        /// <returns>true if piece is a Pawn</returns>
+        private static bool TryGetPawn(ChessPiece piece, out PawnChessPiece pawn)
+        {
+            bool isPawn = piece is PawnChessPiece;
+            pawn = (isPawn) ? piece as PawnChessPiece : null;
+            return isPawn;
         }
 
         /// <summary>
@@ -98,10 +111,11 @@ namespace ChessGUI.Models.SpecialMoves
         /// </summary>
         private static void UpdateCaptureSquare()
         {
-            int direction = (MovedPawn.Color == ChessColor.LIGHT) ? -1 : 1;
+            int rankMove = (MovedPawn.Color == ChessColor.LIGHT) ? -1 : 1;
+
             ChessSquare square = MovedPawn.Location;
 
-            CaptureSquare = Game.Controller.BoardModel.SquareAt(square.File, square.Rank + direction);
+            CaptureSquare = Game.Controller.BoardModel.SquareAt(square.File, square.Rank + rankMove);
             CaptureSquare.Piece = MovedPawn;
         }
 

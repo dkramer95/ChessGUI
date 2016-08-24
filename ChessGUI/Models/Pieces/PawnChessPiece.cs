@@ -9,12 +9,10 @@ namespace Chess.Models.Pieces
     /// </summary>
     public class PawnChessPiece : ChessPiece
     {
-        private Move[] _moveDirection;
-
         // End rank of this Pawn for Promotion
         public int EndRank { get; private set; }
         public override char Symbol { get { return 'P'; } }
-        public override Move[] MoveDirections { get { return _moveDirection; } }
+        public override Move[] MoveDirections { get; protected set; }
         public override int Value { get { return 1; } }
         public override string ToString() { return Color + "_Pawn"; }
 
@@ -26,8 +24,8 @@ namespace Chess.Models.Pieces
 
         protected void Init()
         {
-            _moveDirection = (Color == ChessColor.LIGHT) ? Moves.NORTH : Moves.SOUTH;
-            EndRank = (_moveDirection == Moves.NORTH) ? ChessBoard.MAX_RANK : ChessBoard.MIN_RANK;
+            MoveDirections = (Color == ChessColor.LIGHT) ? Moves.NORTH : Moves.SOUTH;
+            EndRank = (MoveDirections == Moves.NORTH) ? ChessBoard.MAX_RANK : ChessBoard.MIN_RANK;
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace Chess.Models.Pieces
 
         public override List<ChessSquare> GetAvailableMoves()
         {
-            int limit = (!HasMoved()) ? 2 : 1;
+            int limit = GetMoveLimit();
 
             // Scan vertically and remove any squares where we are blocked
             List<ChessSquare> available = BoardScanner.Scan(this, limit);
@@ -61,6 +59,18 @@ namespace Chess.Models.Pieces
             available.AddRange(diagonals);
 
             return available;
+        }
+
+        /// <summary>
+        /// Gets the proper movement limit. A pawn can move two ranks 
+        /// if it hasn't moved before, otherwise it can only move 
+        /// one rank at a time.
+        /// </summary>
+        /// <returns>rank movement int value</returns>
+        private int GetMoveLimit()
+        {
+            int limit = (!HasMoved()) ? 2 : 1;
+            return limit;
         }
     }
 }

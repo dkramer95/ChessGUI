@@ -28,16 +28,13 @@ namespace Chess.Models.Base
         // Amount of moves this ChessPiece has made
         public int MoveCount { get; protected set; }
 
-        // Should this ChessPiece be ignored?
+        // Should this ChessPiece be ignored. This is used for testing movement.
         public bool Ignore { get; set; }
 
         // Has this ChessPiece been captured by another ChessPiece?
         public bool IsCaptured { get; set; }
 
-        // Other ChessPieces that this ChessPiece can capture
-        public List<ChessPiece> AvailableCaptures { get; private set; }
-
-        public abstract Move[] MoveDirections { get; }
+        public abstract Move[] MoveDirections { get; protected set; }
 
 
         /// <summary>
@@ -49,7 +46,6 @@ namespace Chess.Models.Base
             Location = location;
             Color = color;
             Location.Piece = this;
-            AvailableCaptures = new List<ChessPiece>();
         }
 
         /// <summary>

@@ -71,7 +71,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controllers\ChessBoardController.cs" />
-    <Compile Include="Controllers\MovementController.cs" />
+    <Compile Include="Controllers\MoveController.cs" />
     <Compile Include="Controllers\ChessGame.cs" />
     <Compile Include="Converters\ChessImageConverter.cs" />
     <Compile Include="Dialogs\PromotionDialog.xaml.cs">

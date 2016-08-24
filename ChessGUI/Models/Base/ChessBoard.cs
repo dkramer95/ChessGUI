@@ -116,16 +116,16 @@ namespace Chess.Models.Base
         /// <summary>
         /// Adds pieces of specific ChessColor to this GameBoard.
         /// </summary>
-        /// <param name="start">Starting location</param>
-        /// <param name="end">Ending location</param>
+        /// <param name="startRank">Starting Rank</param>
+        /// <param name="endRank">Ending Rank</param>
         /// <param name="color">The color of the piece</param>
-        private List<ChessPiece> AddPieces(int start, int end, ChessColor color)
+        private List<ChessPiece> AddPieces(int startRank, int endRank, ChessColor color)
         {
             List<char> pieceLayout = GetInitialPieceLayout(color);
             List<ChessPiece> pieceList = new List<ChessPiece>();
             int pieceIndex = 0;
 
-            for (int r = start; r >= end; r--)
+            for (int r = startRank; r >= endRank; r--)
             {
                 for (char f = MIN_FILE; f <= MAX_FILE; f++)
                 {

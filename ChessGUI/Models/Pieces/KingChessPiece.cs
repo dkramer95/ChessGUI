@@ -11,7 +11,7 @@ namespace Chess.Models.Pieces
         public Castling Castling { get; private set; }
         public bool InCheck { get; set; }
         public override char Symbol { get { return 'K'; } }
-        public override Move[] MoveDirections { get { return Moves.ALL; } }
+        public override Move[] MoveDirections { get { return Moves.ALL; } protected set { } }
 
         // technically, kings value is infinite because game is over when captured!
         public override int Value { get { return 10000; } }

@@ -9,7 +9,7 @@ namespace ChessGUI.Controllers
     /// <summary>
     /// Helper class for handling ChessPiece movement from Square_A to Square_B.
     /// </summary>
-    public class MovementController
+    public class MoveController
     {
         // Starting ChessSquare
         public static ChessSquare StartSquare { get; private set; }
@@ -74,8 +74,6 @@ namespace ChessGUI.Controllers
         /// <param name="endSquare">Ending location for piece</param>
         public static void Move(ChessPiece movePiece, ChessSquare endSquare)
         {
-            //TODO:: THERE IS AN ISSUE WITH CLEARING OUT THE PREVIOUS LOCATION'S PIECE AFTER MOVING!
-
             // Start
             ChessSquareView startSquareView = Game.Controller.SquareViewFromSquare(movePiece.Location);
             movePiece.UpdateLocation(endSquare);

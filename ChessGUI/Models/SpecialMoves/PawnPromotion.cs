@@ -18,9 +18,9 @@ namespace ChessGUI.Models.SpecialMoves
         /// </summary>
         public override void Check()
         {
-            if (MovementController.MovePiece is PawnChessPiece)
+            if (MoveController.MovePiece is PawnChessPiece)
             {
-                PawnChessPiece pawn = MovementController.MovePiece as PawnChessPiece;
+                PawnChessPiece pawn = MoveController.MovePiece as PawnChessPiece;
 
                 if (pawn.CanPromote())
                 {
@@ -52,7 +52,7 @@ namespace ChessGUI.Models.SpecialMoves
         {
             // Update Player pieces to replace old pawn with promoted pawn
             UpdatePlayerPieces(promotionPiece);
-            MovementController.MovePiece = promotionPiece;
+            MoveController.MovePiece = promotionPiece;
             promotionPiece.Location.Piece = promotionPiece;
             // Clear out old pawn
             Pawn = null;

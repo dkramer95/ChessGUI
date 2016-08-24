@@ -21,6 +21,8 @@ namespace Chess.Models.Base
 
         public ChessColor Color { get; set; }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         // The chess piece that is currently on this ChessSquare, if any
         private ChessPiece _piece;
         public ChessPiece Piece
@@ -48,8 +50,6 @@ namespace Chess.Models.Base
             Rank = rank;
             Color = color;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Checks to see if this ChessSquare is occupied with a chess piece.
@@ -83,10 +83,15 @@ namespace Chess.Models.Base
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(field));
         }
 
+        /// <summary>
+        /// Compare method used for ordering squares in by their File,Rank.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int CompareTo(object obj)
         {
-            ChessSquare square = obj as ChessSquare;
-            int compareVal = Name.CompareTo(square.Name);
+            ChessSquare otherSquare = obj as ChessSquare;
+            int compareVal = Name.CompareTo(otherSquare.Name);
             return compareVal;
         }
     }

@@ -97,7 +97,6 @@ namespace ChessGUI.Models.Utils
                 if (Piece.IsOpponent(square.Piece))
                 {
                     available.Add(square);
-                    Piece.AvailableCaptures.Add(square.Piece);
                 }
                 didHitPiece = true;
             }
@@ -169,11 +168,6 @@ namespace ChessGUI.Models.Utils
                 if (diagonal != null)
                 {
                     diagonals.Add(diagonal);
-
-                    if (diagonal.IsOccupied())
-                    {
-                        Piece.AvailableCaptures.Add(diagonal.Piece);
-                    }
                 }
             }
             return diagonals;
@@ -216,7 +210,6 @@ namespace ChessGUI.Models.Utils
             Piece = piece;
             Pivot = piece.Location;
             Limit = limit;
-            Piece.AvailableCaptures.Clear();
             ResetStart();
         }
 

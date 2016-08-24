@@ -7,7 +7,7 @@ namespace Chess.Models.Pieces
     public class KnightChessPiece : ChessPiece
     {        
         public override char Symbol { get { return 'N'; } }
-        public override Move[] MoveDirections { get { return Moves.HORIZ_VERT; } }
+        public override Move[] MoveDirections { get { return Moves.HORIZ_VERT; } protected set { } }
         public override int Value { get { return 350; } }
         public override string ToString() { return Color + "_Knight"; }
 

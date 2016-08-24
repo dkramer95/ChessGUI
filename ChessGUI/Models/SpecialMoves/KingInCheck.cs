@@ -18,25 +18,17 @@ namespace ChessGUI.Models.SpecialMoves
             IsInCheck();
         }
 
+        /// <summary>
+        /// Checks to see if the king is InCheck.
+        /// </summary>
+        /// <returns>true if King is InCheck</returns>
         public static bool IsInCheck()
         {
             KingChessPiece king = Game.GetOpponent().KingPiece;
             List<ChessSquare> playerMoves = Game.GetPlayerMoves(Game.ActivePlayer);
 
-            if (playerMoves.Contains(king.Location))
-            {
-                king.InCheck = true;
-                Game.Controller.ToggleCheck(king, true);
-                // Prevent dialog from showing we're in check, if we're actually CheckMate.
-                if (!Game.IsCheckMate())
-                {
-                    MessageBox.Show(king + " is in check!");
-                }
-            } else
-            {
-                king.InCheck = false;
-                Game.Controller.ToggleCheck(king, false);
-            }
+            king.InCheck = (playerMoves.Contains(king.Location));
+            Game.UpdateKingCheck(king);
 
             return king.InCheck;
         }

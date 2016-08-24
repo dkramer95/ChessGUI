@@ -5,6 +5,8 @@ using System.Windows;
 using ChessGUI.Models.AI;
 using ChessGUI.Models.SpecialMoves;
 using ChessGUI.Dialogs;
+using Chess.Models.Pieces;
+using System;
 
 namespace ChessGUI.Controllers
 {
@@ -13,18 +15,15 @@ namespace ChessGUI.Controllers
     /// </summary>
     public class ChessGame
     {
-        private List<SpecialMove> _specialMoves;
+        public List<SpecialMove> SpecialMoves { get; private set; }
 
         public ChessBoardController Controller { get; private set; }
 
-        public ChessPlayer LightPlayer { get; private set; }
-        public ChessPlayer DarkPlayer { get; private set; }
-        
-        // Very basic AI test player
-        public BasicAI AIPlayer { get; private set; }
-
         // The player who is currently playing
         public ChessPlayer ActivePlayer { get; set; }
+
+        public ChessPlayer LightPlayer { get; private set; }
+        public ChessPlayer DarkPlayer { get; private set; }
 
         public ChessGame()
         {
@@ -38,16 +37,40 @@ namespace ChessGUI.Controllers
         private void Init()
         {
             Debug.SHOW_MESSAGES = true;
-            MovementController.Game = this;
+            MoveController.Game = this;
 
             InitSpecialMoves();
 
             Controller  = new ChessBoardController();
             LightPlayer = new ChessPlayer(ChessColor.LIGHT, Controller.BoardModel.LightPieces);
             DarkPlayer  = new ChessPlayer(ChessColor.DARK, Controller.BoardModel.DarkPieces);
+        }
 
-            // TESTING
-            AIPlayer = new BasicAI(DarkPlayer);
+        /// <summary>
+        /// Updates the InCheck state of the king. If a king is in check
+        /// and CheckMate, the game ends.
+        /// </summary>
+        /// <param name="king"></param>
+        public void UpdateKingCheck(KingChessPiece king)
+        {
+            Controller.ToggleCheck(king);
+
+            if (king.InCheck)
+            {
+                // Advance next turn to preview if king is in checkmate
+                NextTurn();
+                if (!IsCheckMate())
+                {
+                    // Just in check
+                    MessageBox.Show(king + " in check!");
+                    NextTurn();
+                } else
+                {
+                    // Game over
+                    MessageBox.Show("CheckMate!");
+                    Controller.SetViewEnabled(false);
+                }
+            }
         }
 
         /// <summary>
@@ -58,7 +81,7 @@ namespace ChessGUI.Controllers
             // Make sure special moves can communicate with this game
             SpecialMove.Init(this);
 
-            _specialMoves = new List<SpecialMove>()
+            SpecialMoves = new List<SpecialMove>()
             {
                  new PawnPromotion(), new EnPassant(), new KingCheck(),
             };
@@ -79,7 +102,7 @@ namespace ChessGUI.Controllers
         /// </summary>
         public void CheckSpecialMoves()
         {
-            _specialMoves.ForEach(m => m.Check());
+            SpecialMoves.ForEach(m => m.Check());
         }
 
         /// <summary>
@@ -101,12 +124,15 @@ namespace ChessGUI.Controllers
             List<ChessSquare> validMoves = new List<ChessSquare>();
             List<ChessPiece> playerPieces = GetPlayerPieces(ActivePlayer);
 
+            // attempt to get all valid moves for each of the player pieces
             playerPieces.ForEach(p =>
             {
                 List<ChessSquare> movesForPiece = 
-                    MovementController.GetValidMoves(p, ActivePlayer.KingPiece, GetOpponent());
+                    MoveController.GetValidMoves(p, ActivePlayer.KingPiece, GetOpponent());
                 validMoves.AddRange(movesForPiece);
             });
+
+            // if no pieces can move legally w/o removing king from check, we've hit CheckMate
             bool isCheckMate = (validMoves.Count == 0);
             return isCheckMate;
         }
@@ -118,8 +144,6 @@ namespace ChessGUI.Controllers
         {
             ClearActivePlayer();
             AdvanceActivePlayer();
-
-            //TestAIPlayerMove();
         }
 
         /// <summary>
@@ -140,7 +164,7 @@ namespace ChessGUI.Controllers
 
             // Updates ChessMovement to only allow movement from pieces belonging
             // to the ActivePlayer
-            MovementController.ActivePlayer = ActivePlayer;
+            MoveController.ActivePlayer = ActivePlayer;
         }
 
         /// <summary>
@@ -201,20 +225,6 @@ namespace ChessGUI.Controllers
         {
             ChessPlayer opponent = (ActivePlayer == LightPlayer) ? DarkPlayer : LightPlayer;
             return opponent;
-        }
-
-
-        // TESTING BASIC BASIC AIPLAYER MOVEMENT. TODO REMOVE THIS AND REPLACE WITH
-        // BETTER AI IN THE FUTURE!!!
-        private async void TestAIPlayerMove()
-        {
-            // TESTING AI PLAYER MOVEMENT
-            if (AIPlayer.Player == ActivePlayer)
-            {
-                await Task.Delay(3000);
-                AIPlayer.GetMove(Controller);
-                AIPlayer.Player.DidMove = true;
-            }
         }
     }
 }

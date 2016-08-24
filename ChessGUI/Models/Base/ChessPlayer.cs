@@ -11,9 +11,6 @@ namespace Chess.Models.Base
     {
         public List<ChessPiece> Pieces { get; private set; }
 
-        // The active chess piece the player is attempting to move
-        public ChessPiece ActivePiece { get; set; }
-
         public ChessColor Color { get; private set; }
 
         // Have we moved for the current round
