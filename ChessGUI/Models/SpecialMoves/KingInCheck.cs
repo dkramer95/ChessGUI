@@ -1,6 +1,5 @@
 ﻿using Chess.Models.Base;
 using Chess.Models.Pieces;
-using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -26,11 +25,17 @@ namespace ChessGUI.Models.SpecialMoves
 
             if (playerMoves.Contains(king.Location))
             {
-                MessageBox.Show(king + " is in check!");
                 king.InCheck = true;
+                Game.Controller.ToggleCheck(king, true);
+                // Prevent dialog from showing we're in check, if we're actually CheckMate.
+                if (!Game.IsCheckMate())
+                {
+                    MessageBox.Show(king + " is in check!");
+                }
             } else
             {
                 king.InCheck = false;
+                Game.Controller.ToggleCheck(king, false);
             }
 
             return king.InCheck;

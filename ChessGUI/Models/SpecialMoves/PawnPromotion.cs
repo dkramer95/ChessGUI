@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ChessGUI.Controllers;
 using Chess.Models.Pieces;
 using Chess.Models.Base;
@@ -57,6 +53,7 @@ namespace ChessGUI.Models.SpecialMoves
             // Update Player pieces to replace old pawn with promoted pawn
             UpdatePlayerPieces(promotionPiece);
             MovementController.MovePiece = promotionPiece;
+            promotionPiece.Location.Piece = promotionPiece;
             // Clear out old pawn
             Pawn = null;
 

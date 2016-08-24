@@ -37,15 +37,6 @@ namespace Chess.Models.Base
         }
 
         /// <summary>
-        /// Resets the chess board such that all the game pieces are in their original,
-        /// proper starting positions.
-        /// </summary>
-        public void Reset()
-        {
-            Init();
-        }
-
-        /// <summary>
         /// Initializes this Chessboard by ensuring that all the tiles are created.
         /// </summary>
         public void Init()
@@ -75,7 +66,6 @@ namespace Chess.Models.Base
                 }
                 AlternateTileColor(ref squareColor);
             }
-            //Console.WriteLine("squares: " + _squares.Count);
         }
 
         /// <summary>
@@ -182,40 +172,6 @@ namespace Chess.Models.Base
         {
             return SquareAt(file + "" + rank);
         }
-
-
-
-
-
-        // TODO discard these. Better place for them is in ChessGame!!
-
-        [Obsolete]
-        /// <summary>
-        /// Returns the set of pieces that are an enemy to the specified piece.
-        /// </summary>
-        /// <param name="piece">Piece to check to see who is the enemy</param>
-        /// <returns>List of enemy pieces</returns>
-        public List<ChessPiece> GetEnemyPieces(ChessPiece piece)
-        {
-            List<ChessPiece> pieces = (piece.Color == ChessColor.LIGHT) ? DarkPieces : LightPieces;
-            return pieces;
-        }
-
-        [Obsolete]
-        /// <summary>
-        /// Gets a list of all the ChessSquares that the enemy could move to.
-        /// </summary>
-        /// <param name="piece">Piece to check to see who is the enemy</param>
-        /// <returns>List of enemy moves</returns>
-        public List<ChessSquare> GetEnemyMoves(ChessPiece piece)
-        {
-            List<ChessPiece> enemyPieces = GetEnemyPieces(piece);
-            List<ChessSquare> enemyMoves = new List<ChessSquare>();
-            enemyPieces.ForEach(p => enemyMoves.AddRange(p.GetAvailableMoves()));
-
-            return enemyMoves;
-        }
-
 
         #region old
 

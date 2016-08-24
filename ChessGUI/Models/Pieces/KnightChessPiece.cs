@@ -1,5 +1,4 @@
 ﻿using Chess.Models.Base;
-using System;
 using System.Collections.Generic;
 using ChessGUI.Models.Utils;
 

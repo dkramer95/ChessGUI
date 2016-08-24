@@ -3,9 +3,9 @@ using ChessGUI.Views;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
-using System;
 using System.Text;
 using System.Collections.Generic;
+using Chess.Models.Pieces;
 
 namespace ChessGUI.Controllers
 {
@@ -37,19 +37,22 @@ namespace ChessGUI.Controllers
             BoardView.Focus();
         }
 
-        /// <summary>
-        /// Hot keys support for debug operations.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BoardView_KeyDown(object sender, KeyEventArgs e)
+        public void ToggleCheck(KingChessPiece king, bool toggleVal)
         {
-            if (e.Key == Key.F8)
+            ChessSquareView kingSquareView = SquareViewFromSquare(king.Location);
+            if (toggleVal)
             {
-                PrintBoardDebug();
+                kingSquareView.ToggleCheck();
+            } else
+            {
+                kingSquareView.ResetBackground();
             }
         }
 
+        /// <summary>
+        /// Debug utility to verify that the the view is correctly representing
+        /// the model, by printing out every ChessSquare and its contents.
+        /// </summary>
         public void PrintBoardDebug()
         {
             StringBuilder sb = new StringBuilder();
@@ -92,9 +95,13 @@ namespace ChessGUI.Controllers
             }
         }
 
-        public void DisableView()
+        /// <summary>
+        /// Disables the entire view. This is used when CheckMate has been reached.
+        /// <param name="value">bool value for enabled or disabled</param>
+        /// </summary>
+        public void SetViewEnabled(bool value)
         {
-            BoardView.Squares.ForEach(s => s.IsEnabled = false);
+            BoardView.Squares.ForEach(s => s.IsEnabled = value);
         }
 
         /// <summary>
@@ -150,6 +157,19 @@ namespace ChessGUI.Controllers
         }
 
         /// <summary>
+        /// Hot keys support for debug operations.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BoardView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F8)
+            {
+                PrintBoardDebug();
+            }
+        }
+
+        /// <summary>
         /// Adds click events to the ChessBoard for handling ChessPiece movement.
         /// </summary>
         /// <param name="squareModel">Model for the view</param>
@@ -197,7 +217,7 @@ namespace ChessGUI.Controllers
             if (game.IsCheckMate())
             {
                 MessageBox.Show("Checkmate!", "Game Over");
-                game.Controller.DisableView();
+                game.Controller.SetViewEnabled(false);
             }
 
         }

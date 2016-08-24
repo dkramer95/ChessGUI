@@ -3,7 +3,6 @@ using Chess.Models.Pieces;
 using ChessGUI.Views;
 using System.Collections.Generic;
 using System.Windows;
-using ChessGUI.Models.SpecialMoves;
 
 namespace ChessGUI.Controllers
 {
@@ -42,15 +41,26 @@ namespace ChessGUI.Controllers
                 SetStart(squareView);
             } else
             {
-                SetEnd(squareView);
-                if (CheckMove())
+                if (!CheckStartChanged(squareView))
                 {
-                    MovePiece.MoveTo(EndSquare);
-                    ActivePlayer.DidMove = true;
-                    ClearMovement();
-                } else
+                    SetEnd(squareView);
+                    if (CheckMove())
+                    {
+                        MovePiece.MoveTo(EndSquare);
+                        ActivePlayer.DidMove = true;
+                        ClearMovement();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid " + MovePiece + " move!");
+                    }
+                }
+                // User clicked on a different piece of their own and it
+                // becomes the piece we're moving
+                else
                 {
-                    MessageBox.Show("Invalid " + MovePiece + " move!");
+                    Clear();
+                    SetStart(squareView);
                 }
             }
         }
@@ -64,10 +74,11 @@ namespace ChessGUI.Controllers
         /// <param name="endSquare">Ending location for piece</param>
         public static void Move(ChessPiece movePiece, ChessSquare endSquare)
         {
+            //TODO:: THERE IS AN ISSUE WITH CLEARING OUT THE PREVIOUS LOCATION'S PIECE AFTER MOVING!
+
             // Start
             ChessSquareView startSquareView = Game.Controller.SquareViewFromSquare(movePiece.Location);
-            movePiece.MoveTo(endSquare);
-            endSquare.Piece = movePiece;
+            movePiece.UpdateLocation(endSquare);
             startSquareView.PieceView.Clear();
 
             // End
@@ -121,7 +132,7 @@ namespace ChessGUI.Controllers
             List<ChessSquare> validMoves = new List<ChessSquare>();
             List<ChessSquare> available = movePiece.GetAvailableMoves();
 
-            SetClear(movePiece, king, true);
+            SetClear(movePiece, true);
 
             // For every move, check to see if it puts the ActivePlayer's King
             // in check. If it does, it is not a valid move!
@@ -147,7 +158,7 @@ namespace ChessGUI.Controllers
                 SetIgnore(original, false);
                 s.Piece = original;
             });
-            SetClear(movePiece, king, false);
+            SetClear(movePiece, false);
             return validMoves;
         }
 
@@ -167,19 +178,15 @@ namespace ChessGUI.Controllers
         /// Clears out or fills the movePiece's location.
         /// </summary>
         /// <param name="movePiece">MovePiece</param>
-        /// <param name="king">KingPiece</param>
         /// <param name="clearFlag">flag to control clearing or occupying</param>
-        private static void SetClear(ChessPiece movePiece, KingChessPiece king, bool clearFlag)
+        private static void SetClear(ChessPiece movePiece, bool clearFlag)
         {
-            if (movePiece != king)
+            if (clearFlag)
             {
-                if (clearFlag)
-                {
-                    movePiece.Location.ClearPiece();
-                } else
-                {
-                    movePiece.Location.Piece = movePiece;
-                }
+                movePiece.Location.ClearPiece();
+            } else
+            {
+                movePiece.Location.Piece = movePiece;
             }
         }
 
@@ -263,6 +270,13 @@ namespace ChessGUI.Controllers
             {
                 End = null;
             }
+        }
+
+        private static bool CheckStartChanged(ChessSquareView squareView)
+        {
+            ChessSquare square = squareView.DataContext as ChessSquare;
+            bool didChangeStart = (square.IsOccupied() && (square.Piece.Color == ActivePlayer.Color));
+            return didChangeStart;
         }
 
         /// <summary>

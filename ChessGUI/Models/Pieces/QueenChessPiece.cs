@@ -1,5 +1,4 @@
-﻿using System;
-using Chess.Models.Base;
+﻿using Chess.Models.Base;
 using ChessGUI.Models.Utils;
 
 namespace Chess.Models.Pieces

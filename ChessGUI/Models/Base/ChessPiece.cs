@@ -92,7 +92,7 @@ namespace Chess.Models.Base
         /// will be occupied with this ChessPiece.
         /// </summary>
         /// <param name="newLocation"></param>
-        protected void UpdateLocation(ChessSquare newLocation)
+        public void UpdateLocation(ChessSquare newLocation)
         {
             Location.ClearPiece();
             Location = newLocation;
@@ -113,10 +113,6 @@ namespace Chess.Models.Base
             {
                 pieceToCapture.IsCaptured = true;
                 pieceToCapture.Location.Piece = this;
-                Debug.PrintMsg(this + " captured: " + pieceToCapture);
-            } else
-            {
-                Debug.PrintWarning("Cannot capture pieces of the same color!");
             }
             return didCapture;
         }

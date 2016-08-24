@@ -2,7 +2,6 @@
 using Chess.Models.Pieces;
 using ChessGUI.Controllers;
 using System.Linq;
-using System.Windows;
 
 namespace ChessGUI.Models.SpecialMoves
 {

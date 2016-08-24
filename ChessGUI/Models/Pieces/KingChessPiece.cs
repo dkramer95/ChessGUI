@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using ChessGUI.Models.SpecialMoves;
 using ChessGUI.Models.Utils;
-using ChessGUI.Controllers;
-using System.Windows;
 
 namespace Chess.Models.Pieces
 {

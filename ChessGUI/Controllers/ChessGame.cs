@@ -3,13 +3,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows;
 using ChessGUI.Models.AI;
-using Chess.Models.Pieces;
 using ChessGUI.Models.SpecialMoves;
-using System.Windows.Media;
-using System.Text;
-using System;
 using ChessGUI.Dialogs;
-using ChessGUI.Views;
 
 namespace ChessGUI.Controllers
 {
@@ -65,7 +60,7 @@ namespace ChessGUI.Controllers
 
             _specialMoves = new List<SpecialMove>()
             {
-                new KingCheck(), new EnPassant(), new PawnPromotion(),
+                 new PawnPromotion(), new EnPassant(), new KingCheck(),
             };
         }
 
@@ -140,6 +135,7 @@ namespace ChessGUI.Controllers
         /// </summary>
         private void AdvanceActivePlayer()
         {
+            // Alternate between Light and Dark
             ActivePlayer = (ActivePlayer == LightPlayer) ? DarkPlayer : LightPlayer;
 
             // Updates ChessMovement to only allow movement from pieces belonging

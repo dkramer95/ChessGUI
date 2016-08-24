@@ -70,12 +70,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CommandProcessor.cs" />
-    <Compile Include="Commands\ChessCommand.cs" />
-    <Compile Include="Commands\GetMovesCommand.cs" />
-    <Compile Include="Commands\MoveDoubleCommand.cs" />
-    <Compile Include="Commands\MoveSingleCommand.cs" />
-    <Compile Include="Commands\PlaceCommand.cs" />
     <Compile Include="Controllers\ChessBoardController.cs" />
     <Compile Include="Controllers\MovementController.cs" />
     <Compile Include="Controllers\ChessGame.cs" />
@@ -199,6 +193,9 @@
     <Resource Include="bin\Debug\res\LIGHT\LIGHT_Pawn.png" />
     <Resource Include="bin\Debug\res\LIGHT\LIGHT_Queen.png" />
     <Resource Include="bin\Debug\res\LIGHT\LIGHT_Rook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
