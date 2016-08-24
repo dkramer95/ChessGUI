@@ -173,18 +173,6 @@
     <Content Include="bin\Debug\ChessGUI.exe" />
     <Content Include="bin\Debug\ChessGUI.pdb" />
     <Content Include="bin\Debug\ChessGUI.vshost.exe" />
-    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Rook.png" />
-    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Queen.png" />
-    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Pawn.png" />
-    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Knight.png" />
-    <Resource Include="bin\Debug\res\LIGHT\LIGHT_King.png" />
-    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Bishop.png" />
-    <Resource Include="bin\Debug\res\DARK\DARK_Bishop.png" />
-    <Resource Include="bin\Debug\res\DARK\DARK_King.png" />
-    <Resource Include="bin\Debug\res\DARK\DARK_Knight.png" />
-    <Resource Include="bin\Debug\res\DARK\DARK_Pawn.png" />
-    <Resource Include="bin\Debug\res\DARK\DARK_Queen.png" />
-    <Resource Include="bin\Debug\res\DARK\DARK_Rook.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -197,6 +185,20 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="bin\Debug\res\DARK\DARK_Bishop.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_King.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_Knight.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_Pawn.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_Queen.png" />
+    <Resource Include="bin\Debug\res\DARK\DARK_Rook.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Bishop.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_King.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Knight.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Pawn.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Queen.png" />
+    <Resource Include="bin\Debug\res\LIGHT\LIGHT_Rook.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

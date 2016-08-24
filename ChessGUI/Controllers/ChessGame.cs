@@ -77,28 +77,14 @@ namespace ChessGUI.Controllers
             // fake out first time (really is light player who goes first)
             ActivePlayer = DarkPlayer;
             NextTurn();
-            Play();
         }
 
         /// <summary>
-        /// Main game loop. Waits until the active player has moved, and then evaluates
-        /// whether or not we have reached CheckMate (game over). If we haven't then 
-        /// all of the special mvoes are evaluated and control goes to the next player.
+        /// Checks all special moves.
         /// </summary>
-        private async void Play()
+        public void CheckSpecialMoves()
         {
-            while (!IsCheckMate())
-            {
-                do
-                {
-                    await Task.Delay(50);
-                } while (!ActivePlayer.DidMove);
-                _specialMoves.ForEach(m => m.Check());
-                NextTurn();
-            }
-            MessageBox.Show("CheckMate!", "Game Over");
-            Controller.DisableView();
-            Reset();
+            _specialMoves.ForEach(m => m.Check());
         }
 
         /// <summary>
@@ -115,7 +101,7 @@ namespace ChessGUI.Controllers
         /// this ChessGame is over.
         /// </summary>
         /// <returns></returns>
-        private bool IsCheckMate()
+        public bool IsCheckMate()
         {
             List<ChessSquare> validMoves = new List<ChessSquare>();
             List<ChessPiece> playerPieces = GetPlayerPieces(ActivePlayer);
@@ -133,7 +119,7 @@ namespace ChessGUI.Controllers
         /// <summary>
         /// Advances to the next Player so that they can take their turn.
         /// </summary>
-        private void NextTurn()
+        public void NextTurn()
         {
             ClearActivePlayer();
             AdvanceActivePlayer();
@@ -159,26 +145,6 @@ namespace ChessGUI.Controllers
             // Updates ChessMovement to only allow movement from pieces belonging
             // to the ActivePlayer
             MovementController.ActivePlayer = ActivePlayer;
-        }
-
-        [Obsolete]
-        /// <summary>
-        /// Toggles the InCheck indicator for the specified king.
-        /// </summary>
-        /// <param name="king"></param>
-        public void ToggleCheck(KingChessPiece king)
-        {
-            int squareIndex = Controller.BoardModel.Squares.IndexOf(king.Location);
-            ChessSquareView squareView = Controller.BoardView.Squares[squareIndex];
-
-            if (king.InCheck)
-            {
-                squareView.ToggleCheck();
-                MessageBox.Show(king + " in check!");
-            } else
-            {
-                squareView.ResetBackground();
-            }
         }
 
         /// <summary>
@@ -219,6 +185,11 @@ namespace ChessGUI.Controllers
             return enemyMoves;
         }
 
+        /// <summary>
+        /// Gets all pieces for the specified ChessPlayer.
+        /// </summary>
+        /// <param name="player">Player that we want pieces from</param>
+        /// <returns>List of ChessPieces</returns>
         public List<ChessPiece> GetPlayerPieces(ChessPlayer player)
         {
             List<ChessPiece> playerPieces = player.Pieces.FindAll(p => (!p.Ignore && !p.IsCaptured));

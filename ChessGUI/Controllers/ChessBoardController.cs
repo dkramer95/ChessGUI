@@ -181,6 +181,25 @@ namespace ChessGUI.Controllers
             ChessSquareView squareView = sender as ChessSquareView;
             MovementController.Move(squareView);
             ShowMovesPreview(squareView);
+            CheckDidMove();
+        }
+
+        private void CheckDidMove()
+        {
+            ChessGame game = MovementController.Game;
+
+            if (game.ActivePlayer.DidMove)
+            {
+                game.CheckSpecialMoves();
+                game.NextTurn();
+            }
+
+            if (game.IsCheckMate())
+            {
+                MessageBox.Show("Checkmate!", "Game Over");
+                game.Controller.DisableView();
+            }
+
         }
     }
 }
